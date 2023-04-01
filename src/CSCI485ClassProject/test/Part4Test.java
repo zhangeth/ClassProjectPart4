@@ -239,7 +239,7 @@ public class Part4Test {
     Iterator projectIterator = relAlgOperators.project(EmployeeTableName, DNO, false);
     Random randomGenerator = new Random(randSeed);
 
-    List<Long> expectDnoSet = new ArrayList<>();
+    Set<Long> expectDnoSet = new HashSet<>();
     for (int i = 0; i<initialNumberOfRecords; i++) {
       long dno = getDno(randomGenerator, dnoLB, dnoUB);
       Record record = projectIterator.next();
@@ -253,12 +253,15 @@ public class Part4Test {
     }
 
     List<Record> inorderDnoRecords = relAlgOperators.simpleProject(EmployeeTableName, DNO, true);
-    List<Long> actualDnoSet = new ArrayList<>();
+    List<Long> actualDnoList = new ArrayList<>();
 
     for (Record record : inorderDnoRecords) {
-      actualDnoSet.add((Long) record.getValueForGivenAttrName(DNO));
+      actualDnoList.add((Long) record.getValueForGivenAttrName(DNO));
     }
-    assertEquals(expectDnoSet, actualDnoSet);
+
+    List<Long> expectDnoList = new ArrayList<>(expectDnoSet);
+    java.util.Collections.sort(expectDnoList);
+    assertEquals(expectDnoList, actualDnoList);
 
     ComparisonPredicate predicate = new ComparisonPredicate(SSN, AttributeType.INT, ComparisonOperator.LESS_THAN, 50);
     Iterator selectRes = relAlgOperators.select(EmployeeTableName, predicate, Iterator.Mode.READ_WRITE, false);
