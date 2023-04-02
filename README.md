@@ -18,8 +18,8 @@ Verify correctness by executing the unit test of Part1/Part2/Part3 successfully.
 ## Codes to implement
 Under `src/CSCI485ClassProject`, there are 2 classes to finish:
 - `RelationalAlgebraOperatorsImpl`: implementation of an interface class `RelationalAlgebraOperators`
-
-Feel free to modify other implementations like `Cursor` if needed.
+- `Iterator`: `Iterator` is an abstract class of the concept of Iterator. 
+You need to implement derivative classes of `Iterator` to implement required features.
 
 ## Run Tests on macOS/Linux using `make`
 

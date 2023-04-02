@@ -23,4 +23,5 @@ public abstract class Iterator {
 
   public abstract void commit();
 
+  public abstract void abort();
 }
