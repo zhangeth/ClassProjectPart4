@@ -1,5 +1,9 @@
-package CSCI485ClassProject;
+package CSCI485ClassProject.iterators;
 
+import CSCI485ClassProject.Cursor;
+import CSCI485ClassProject.Iterator;
+import CSCI485ClassProject.RecordsImpl;
+import CSCI485ClassProject.RelationalAlgebraOperatorsImpl;
 import CSCI485ClassProject.fdb.FDBHelper;
 import CSCI485ClassProject.models.ComparisonPredicate;
 import CSCI485ClassProject.models.IndexType;
@@ -14,7 +18,7 @@ import com.apple.foundationdb.tuple.Tuple;
 
 import java.util.List;
 
-public class SelectIterator extends Iterator{
+public class SelectIterator extends Iterator {
 
     private final Database db;
     private Transaction tx;
