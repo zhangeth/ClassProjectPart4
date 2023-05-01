@@ -164,7 +164,7 @@ public class Part3Test {
       assertEquals(getSalary(ssn), rec.getValueForGivenAttrName(Salary));
       ssn++;
     }
-
+    System.out.println("out of");
     assertEquals(StatusCode.SUCCESS, records.commitCursor(cursor));
     assertEquals(ssn, initialNumberOfRecords);
 
