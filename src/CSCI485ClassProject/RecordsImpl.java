@@ -33,7 +33,7 @@ public class RecordsImpl implements Records{
   private TableMetadata getTableMetadataByTableName(Transaction tx, String tableName) {
     TableMetadataTransformer tblMetadataTransformer = new TableMetadataTransformer(tableName);
     List<FDBKVPair> kvPairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, tx,
-        tblMetadataTransformer.getTableAttributeStorePath());
+            tblMetadataTransformer.getTableAttributeStorePath());
     TableMetadata tblMetadata = tblMetadataTransformer.convertBackToTableMetadata(kvPairs);
     return tblMetadata;
   }
@@ -253,7 +253,7 @@ public class RecordsImpl implements Records{
 
     // Open another cursor and scan the table, see if the table schema needs to change because of the deletion
     Cursor scanCursor =
-        new Cursor(Cursor.Mode.READ, cursor.getTableName(), cursor.getTableMetadata(), tx);
+            new Cursor(Cursor.Mode.READ, cursor.getTableName(), cursor.getTableMetadata(), tx);
     boolean isScanCursorInit = false;
     while (true) {
       Record record;
