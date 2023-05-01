@@ -219,6 +219,8 @@ public class Part4Test {
     assertNull(selectRes.next());
     selectRes.commit();
 
+    System.out.println("passed first part of select iterator");
+
     predicate =
         new ComparisonPredicate(Salary, AttributeType.INT, ComparisonOperator.LESS_THAN,
             Age, AttributeType.INT, 2, AlgebraicOperator.PRODUCT);

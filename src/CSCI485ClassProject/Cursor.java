@@ -69,7 +69,6 @@ public class Cursor {
   private IndexType indexType;
   private boolean isIndexUsable = false;
 
-
   // used by cursor updating and deleting
   private Map<String, DirectorySubspace> attrNameToIndexSubspace;
   private Map<String, IndexType> attrNameToIndexType;
