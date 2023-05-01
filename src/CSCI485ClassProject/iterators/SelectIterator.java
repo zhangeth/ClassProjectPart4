@@ -3,7 +3,6 @@ package CSCI485ClassProject.iterators;
 import CSCI485ClassProject.Cursor;
 import CSCI485ClassProject.Iterator;
 import CSCI485ClassProject.RecordsImpl;
-import CSCI485ClassProject.RelationalAlgebraOperatorsImpl;
 import CSCI485ClassProject.fdb.FDBHelper;
 import CSCI485ClassProject.models.ComparisonPredicate;
 import CSCI485ClassProject.models.IndexType;
