@@ -54,16 +54,8 @@ public class SelectIterator extends Iterator {
         {
             String attrName = predicate.getLeftHandSideAttrName();
 
-            if (IndexesUtils.doesIndexExistOnTableAttribute(tx, tableName, attrName))
-            {
-                // make new cursor using index
-                leftCursor = recordsImpl.openCursor(tableName, attrName, predicate.getRightHandSideValue(), predicate.getOperator(), Cursor.Mode.READ, isUsingIndex);
+            leftCursor = recordsImpl.openCursor(tableName, attrName, predicate.getRightHandSideValue(), predicate.getOperator(), Cursor.Mode.READ, isUsingIndex);
                 //recordsImpl.get
-            }
-            else {
-                System.out.println("Attempted to make SelectIterator-Index doesn't exist");
-            }
-
             // make cursor on the attribute, using index or not, next will just
         }
         else if (predicate.getPredicateType() == ComparisonPredicate.Type.TWO_ATTRS)
