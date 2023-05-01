@@ -371,6 +371,7 @@ public class Cursor {
 
     Record record = moveToNextRecord(true);
     if (isPredicateEnabled) {
+      System.out.println("entered predicate enabled block");
       while (record != null && !doesRecordMatchPredicate(record)) {
         record = moveToNextRecord(false);
       }

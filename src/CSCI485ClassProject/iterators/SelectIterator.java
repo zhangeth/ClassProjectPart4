@@ -55,6 +55,7 @@ public class SelectIterator extends Iterator {
             String attrName = predicate.getLeftHandSideAttrName();
 
             leftCursor = recordsImpl.openCursor(tableName, attrName, predicate.getRightHandSideValue(), predicate.getOperator(), Cursor.Mode.READ, isUsingIndex);
+            System.out.println("made leftCur");
                 //recordsImpl.get
             // make cursor on the attribute, using index or not, next will just
         }
@@ -72,7 +73,11 @@ public class SelectIterator extends Iterator {
             if (hasReadLeftFirst)
                 return recordsImpl.getNext(leftCursor);
             else
+            {
+                hasReadLeftFirst = true;
                 return recordsImpl.getFirst(leftCursor);
+            }
+
         }
         else if (cp.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR)
         {
