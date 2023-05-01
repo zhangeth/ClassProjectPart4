@@ -151,7 +151,6 @@ public class Part3Test {
     ssn++;
 
     while (true) {
-      System.out.println("in while loop");
       rec = records.getNext(cursor);
       if (rec == null) {
         break;
@@ -164,13 +163,12 @@ public class Part3Test {
       assertEquals(getSalary(ssn), rec.getValueForGivenAttrName(Salary));
       ssn++;
     }
-    System.out.println("out of");
     assertEquals(StatusCode.SUCCESS, records.commitCursor(cursor));
     assertEquals(ssn, initialNumberOfRecords);
-    System.out.println("booty");
+
     // create the index
     assertEquals(StatusCode.SUCCESS, indexes.createIndex(EmployeeTableName, Email, IndexType.NON_CLUSTERED_HASH_INDEX));
-    System.out.println("booty1");
+
     assertEquals(StatusCode.INDEX_ALREADY_EXISTS_ON_ATTRIBUTE, indexes.createIndex(EmployeeTableName, Email, IndexType.NON_CLUSTERED_B_PLUS_TREE_INDEX));
 
     System.out.println("Test1 passed!");

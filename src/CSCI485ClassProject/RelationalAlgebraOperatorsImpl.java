@@ -1,14 +1,28 @@
 package CSCI485ClassProject;
 
+import CSCI485ClassProject.fdb.FDBHelper;
 import CSCI485ClassProject.models.AssignmentExpression;
 import CSCI485ClassProject.models.ComparisonPredicate;
 import CSCI485ClassProject.models.Record;
+
+import com.apple.foundationdb.Database;
+import com.apple.foundationdb.Transaction;
+import com.apple.foundationdb.directory.DirectorySubspace;
+import com.apple.foundationdb.tuple.Tuple;
 
 import java.util.List;
 import java.util.Set;
 
 // your codes
 public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperators {
+
+  private final Database db;
+
+  public RelationalAlgebraOperatorsImpl()
+  {
+    db = FDBHelper.initialization();
+  }
+
 
   @Override
   public Iterator select(String tableName, ComparisonPredicate predicate, Iterator.Mode mode, boolean isUsingIndex) {
