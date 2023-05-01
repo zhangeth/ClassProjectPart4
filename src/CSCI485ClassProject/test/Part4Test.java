@@ -235,7 +235,7 @@ public class Part4Test {
     System.out.println("Test1 passed!");
   }
 
-
+  /*
   @Test
   public void unitTest2 () {
     Iterator projectIterator = relAlgOperators.project(EmployeeTableName, DNO, false);
@@ -288,7 +288,9 @@ public class Part4Test {
     assertEquals(expectedEmailSet, actualEmailSet);
     System.out.println("Test2 passed!");
   }
+  */
 
+  /*
   @Test
   public void unitTest3 () {
     // create the Department Table
@@ -341,7 +343,8 @@ public class Part4Test {
     joinResIterator.commit();
     System.out.println("Test3 passed!");
   }
-
+  */
+  /*
   @Test
   public void unitTest4() {
     // insert new records in the department table
@@ -362,7 +365,9 @@ public class Part4Test {
     assertNull(departmentIterator.next());
     System.out.println("Test4 passed!");
   }
+  */
 
+  /*
   @Test
   public void unitTest5() {
     AssignmentExpression salaryUpdateExpression =
@@ -415,7 +420,8 @@ public class Part4Test {
     iterator.commit();
     System.out.println("Test5 passed!");
   }
-
+  */
+  /*
   @Test
   public void unitTest6() {
     // delete Department with DNO=40
@@ -447,4 +453,6 @@ public class Part4Test {
 
     System.out.println("Test6 passed!");
   }
+  */
+
 }

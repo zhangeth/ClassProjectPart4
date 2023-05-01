@@ -25,12 +25,11 @@ public class SelectIterator extends Iterator {
     // used only for two Attr predicates
     Cursor rightCursor;
     ComparisonPredicate cp;
-
     Iterator.Mode mode;
-
     RecordsImpl recordsImpl;
-
     boolean isUsingIndex;
+    boolean hasReadLeftFirst = false;
+    boolean hasReadRightFirst = false;
 
 
     public SelectIterator()
@@ -59,6 +58,7 @@ public class SelectIterator extends Iterator {
             {
                 // make new cursor using index
                 leftCursor = recordsImpl.openCursor(tableName, attrName, predicate.getRightHandSideValue(), predicate.getOperator(), Cursor.Mode.READ, isUsingIndex);
+                //recordsImpl.get
             }
             else {
                 System.out.println("Attempted to make SelectIterator-Index doesn't exist");
@@ -77,7 +77,10 @@ public class SelectIterator extends Iterator {
         // use only left cursor if one predicate
         if (cp.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR)
         {
-            return recordsImpl.getNext(leftCursor);
+            if (hasReadLeftFirst)
+                return recordsImpl.getNext(leftCursor);
+            else
+                return recordsImpl.getFirst(leftCursor);
         }
         else if (cp.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR)
         {
