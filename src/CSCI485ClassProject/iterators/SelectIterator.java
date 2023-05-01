@@ -51,8 +51,6 @@ public class SelectIterator extends Iterator {
         this.mode = mode;
         this.isUsingIndex = isUsingIndex;
 
-        TableMetadata tbm = RelationalAlgebraOperatorsImpl.getTableMetadataByTableName(db, tx, tableName);
-
         // make appropriate cursor, according to predicate type
         if (predicate.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR)
         {

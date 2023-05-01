@@ -22,14 +22,6 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
   // Impl has own transaction, each respective iterator has its own tx as well
   Transaction tx;
 
-  public static TableMetadata getTableMetadataByTableName(Database db, Transaction tx, String tableName) {
-    TableMetadataTransformer tblMetadataTransformer = new TableMetadataTransformer(tableName);
-    List<FDBKVPair> kvPairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, tx,
-            tblMetadataTransformer.getTableAttributeStorePath());
-    TableMetadata tblMetadata = tblMetadataTransformer.convertBackToTableMetadata(kvPairs);
-    return tblMetadata;
-  }
-
   public RelationalAlgebraOperatorsImpl()
   {
     db = FDBHelper.initialization();
