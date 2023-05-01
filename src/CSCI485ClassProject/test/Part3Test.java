@@ -167,9 +167,10 @@ public class Part3Test {
     System.out.println("out of");
     assertEquals(StatusCode.SUCCESS, records.commitCursor(cursor));
     assertEquals(ssn, initialNumberOfRecords);
-
+    System.out.println("booty");
     // create the index
     assertEquals(StatusCode.SUCCESS, indexes.createIndex(EmployeeTableName, Email, IndexType.NON_CLUSTERED_HASH_INDEX));
+    System.out.println("booty1");
     assertEquals(StatusCode.INDEX_ALREADY_EXISTS_ON_ATTRIBUTE, indexes.createIndex(EmployeeTableName, Email, IndexType.NON_CLUSTERED_B_PLUS_TREE_INDEX));
 
     System.out.println("Test1 passed!");
