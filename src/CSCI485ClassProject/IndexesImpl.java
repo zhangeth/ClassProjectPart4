@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class IndexesImpl implements Indexes{
-
   private Database db;
   private Records records;
 

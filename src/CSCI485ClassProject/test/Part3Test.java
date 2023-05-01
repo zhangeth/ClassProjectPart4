@@ -132,6 +132,8 @@ public class Part3Test {
       assertEquals(StatusCode.SUCCESS, records.insertRecord(EmployeeTableName, EmployeeTablePKAttributes, primaryKeyVal, EmployeeTableNonPKAttributeNames, nonPrimaryKeyVal));
     }
 
+    System.out.println("got passed initialization");
+
     // verify that the insertion succeeds
     Cursor cursor = records.openCursor(EmployeeTableName, Cursor.Mode.READ);
     assertNotNull(cursor);
@@ -149,6 +151,7 @@ public class Part3Test {
     ssn++;
 
     while (true) {
+      System.out.println("in while loop");
       rec = records.getNext(cursor);
       if (rec == null) {
         break;
