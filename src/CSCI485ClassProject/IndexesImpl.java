@@ -21,6 +21,10 @@ public class IndexesImpl implements Indexes{
   private Database db;
   private Records records;
 
+  public IndexesImpl() {
+    db = FDBHelper.initialization();
+  }
+
   public IndexesImpl(Records records) {
     db = FDBHelper.initialization();
     this.records = records;
