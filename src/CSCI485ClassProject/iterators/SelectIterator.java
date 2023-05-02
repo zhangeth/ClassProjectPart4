@@ -81,7 +81,7 @@ public class SelectIterator extends Iterator {
             Record r = null;
             if (!hasReadLeftFirst)
             {
-                System.out.println("Entered two block");
+                // System.out.println("Entered two block");
                 hasReadLeftFirst = true;
                 r = recordsImpl.getFirst(leftCursor);
             }

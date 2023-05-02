@@ -87,7 +87,17 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
   @Override
   public List<Record> simpleProject(String tableName, String attrName, boolean isDuplicateFree) {
-    return null;
+    List<Record> ans = new ArrayList<>();
+    ProjectIterator pi = new ProjectIterator(tableName, attrName, isDuplicateFree, db);
+    Record r = pi.next();
+
+    while (r != null)
+    {
+      ans.add(r);
+      r = pi.next();
+    }
+
+    return ans;
   }
 
   @Override

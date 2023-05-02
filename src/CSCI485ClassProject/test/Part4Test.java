@@ -268,6 +268,7 @@ public class Part4Test {
     List<Long> expectDnoList = new ArrayList<>(expectDnoSet);
     java.util.Collections.sort(expectDnoList);
     assertEquals(expectDnoList, actualDnoList);
+    System.out.println("passed 2nd part proj iterator test");
 
     ComparisonPredicate predicate = new ComparisonPredicate(SSN, AttributeType.INT, ComparisonOperator.LESS_THAN, 50);
     Iterator selectRes = relAlgOperators.select(EmployeeTableName, predicate, Iterator.Mode.READ_WRITE, false);
