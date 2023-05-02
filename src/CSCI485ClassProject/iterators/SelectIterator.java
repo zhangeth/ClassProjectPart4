@@ -85,6 +85,9 @@ public class SelectIterator extends Iterator {
                 hasReadLeftFirst = true;
                 r = recordsImpl.getFirst(leftCursor);
             }
+            else {
+                r = recordsImpl.getNext(leftCursor);
+            }
             while (r != null)
             {
                 // compare values and such
