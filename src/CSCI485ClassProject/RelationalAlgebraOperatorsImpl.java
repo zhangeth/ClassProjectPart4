@@ -54,6 +54,7 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
         res.add(rec);
         rec = si.next();
       }
+
       return res;
     }
 

@@ -59,7 +59,6 @@ public class SelectIterator extends Iterator {
         {
             // make generic cursor to traverse by pks
             leftCursor = recordsImpl.openCursor(tableName, Cursor.Mode.READ);
-
         }
 
     }
@@ -99,18 +98,23 @@ public class SelectIterator extends Iterator {
                 // get values
                 Object leftVal = r.getValueForGivenAttrName(cp.getLeftHandSideAttrName());
                 Object rightVal = r.getValueForGivenAttrName(cp.getRightHandSideAttrName());
+                System.out.println("leftVal: " + leftVal);
+                System.out.println("rightVal pre Algebra: " + rightVal);
                 if (leftType == AttributeType.INT)
                 {
                     // apply algebraic
                     if (cp.getRightHandSideOperator() == AlgebraicOperator.PRODUCT)
                     {
+                        System.out.println("entered product check");
                         long val1 = ComparisonUtils.convertObjectToLong(rightVal);
                         long val2 = ComparisonUtils.convertObjectToLong(cp.getRightHandSideValue());
 
                         rightVal = (Object)(val1 * val2);
+                        System.out.println("rightVal: " + rightVal);
                     }
                     if (ComparisonUtils.compareTwoINT(leftVal, rightVal, cp.getOperator()))
                     {
+                        System.out.println("returning");
                         return r;
                     }
                 }
