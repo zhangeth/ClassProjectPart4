@@ -1,6 +1,8 @@
 package CSCI485ClassProject.utils;
 
+import CSCI485ClassProject.models.AttributeType;
 import CSCI485ClassProject.models.ComparisonOperator;
+import CSCI485ClassProject.models.ComparisonPredicate;
 
 public class ComparisonUtils {
   public static long convertObjectToLong(Object o)
@@ -13,6 +15,23 @@ public class ComparisonUtils {
     }
     return val1;
   }
+
+  public static boolean checkComparisonPredicateTypes(ComparisonPredicate cp)
+  {
+    if (cp.getPredicateType() == ComparisonPredicate.Type.TWO_ATTRS)
+    {
+      AttributeType leftType = cp.getLeftHandSideAttrType();
+      AttributeType rightType = cp.getRightHandSideAttrType();
+      if (leftType != rightType)
+      {
+        System.out.println("Types don't match");
+        return false;
+      }
+    }
+
+    return true;
+  }
+
 
   public static boolean compareTwoINT(Object obj1, Object obj2, ComparisonOperator cmp) {
     long val1;

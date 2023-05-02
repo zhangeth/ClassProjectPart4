@@ -8,6 +8,7 @@ import CSCI485ClassProject.models.ComparisonPredicate;
 import CSCI485ClassProject.models.Record;
 
 import CSCI485ClassProject.models.TableMetadata;
+import CSCI485ClassProject.utils.ComparisonUtils;
 import com.apple.foundationdb.Database;
 import com.apple.foundationdb.Transaction;
 
@@ -35,13 +36,21 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
     // check table exists
     List<String> tablePath = new ArrayList<>(); tablePath.add(tableName);
     if (FDBHelper.doesSubdirectoryExists(tx, tablePath))
-      return new SelectIterator(tableName, predicate, mode, isUsingIndex, db);
+    {
+      // check types of predicate
+      if (ComparisonUtils.checkComparisonPredicateTypes(predicate))
+        return new SelectIterator(tableName, predicate, mode, isUsingIndex, db);
+    }
 
     return null;
   }
 
   @Override
   public Set<Record> simpleSelect(String tableName, ComparisonPredicate predicate, boolean isUsingIndex) {
+
+    if (!ComparisonUtils.checkComparisonPredicateTypes(predicate))
+      return null;
+
     Set<Record> res = new HashSet<>();
     // check table exists
     List<String> tablePath = new ArrayList<>(); tablePath.add(tableName);
