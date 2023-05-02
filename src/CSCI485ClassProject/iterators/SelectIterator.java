@@ -77,11 +77,12 @@ public class SelectIterator extends Iterator {
             }
 
         }
-        else if (cp.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR)
+        else if (cp.getPredicateType() == ComparisonPredicate.Type.TWO_ATTRS)
         {
             Record r = null;
             if (!hasReadLeftFirst)
             {
+                System.out.println("Entered two block");
                 hasReadLeftFirst = true;
                 r = recordsImpl.getFirst(leftCursor);
             }
