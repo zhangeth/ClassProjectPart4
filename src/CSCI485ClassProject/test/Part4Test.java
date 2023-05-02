@@ -238,7 +238,7 @@ public class Part4Test {
     System.out.println("Test1 passed!");
   }
 
-  /*
+
   @Test
   public void unitTest2 () {
     Iterator projectIterator = relAlgOperators.project(EmployeeTableName, DNO, false);
@@ -256,6 +256,7 @@ public class Part4Test {
       assertEquals(dno, record.getValueForGivenAttrName(DNO));
       expectDnoSet.add(dno);
     }
+    System.out.println("passed 1st part proj iterator test");
 
     List<Record> inorderDnoRecords = relAlgOperators.simpleProject(EmployeeTableName, DNO, true);
     List<Long> actualDnoList = new ArrayList<>();
@@ -291,7 +292,7 @@ public class Part4Test {
     assertEquals(expectedEmailSet, actualEmailSet);
     System.out.println("Test2 passed!");
   }
-  */
+
 
   /*
   @Test

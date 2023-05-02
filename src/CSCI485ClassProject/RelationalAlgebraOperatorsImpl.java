@@ -2,6 +2,7 @@ package CSCI485ClassProject;
 
 import CSCI485ClassProject.fdb.FDBHelper;
 import CSCI485ClassProject.fdb.FDBKVPair;
+import CSCI485ClassProject.iterators.ProjectIterator;
 import CSCI485ClassProject.iterators.SelectIterator;
 import CSCI485ClassProject.models.AssignmentExpression;
 import CSCI485ClassProject.models.ComparisonPredicate;
@@ -62,7 +63,6 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
       {
         res.add(rec);
         rec = si.next();
-        System.out.println("called");
       }
 
     }
@@ -71,7 +71,13 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
   @Override
   public Iterator project(String tableName, String attrName, boolean isDuplicateFree) {
-    return null;
+      List<String> tablePath = new ArrayList<>(); tablePath.add(tableName);
+      if (FDBHelper.doesSubdirectoryExists(tx, tablePath))
+      {
+        return new ProjectIterator(tableName, attrName, isDuplicateFree, db);
+      }
+
+      return null;
   }
 
   @Override
