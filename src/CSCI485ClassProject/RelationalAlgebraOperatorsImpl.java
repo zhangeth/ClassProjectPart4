@@ -53,6 +53,7 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
       {
         res.add(rec);
         rec = si.next();
+        System.out.println("called");
       }
 
     }
