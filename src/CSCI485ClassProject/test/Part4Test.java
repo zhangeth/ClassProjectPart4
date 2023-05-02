@@ -228,6 +228,8 @@ public class Part4Test {
     Set<Record> actualSelectSet = relAlgOperators.simpleSelect(EmployeeTableName, predicate, false);
     assertEquals(expectSet, actualSelectSet);
 
+    System.out.println("passed simple select test");
+
     predicate =
         new ComparisonPredicate(Salary, AttributeType.INT, ComparisonOperator.LESS_THAN,
             Name, AttributeType.VARCHAR, 2, AlgebraicOperator.PRODUCT);

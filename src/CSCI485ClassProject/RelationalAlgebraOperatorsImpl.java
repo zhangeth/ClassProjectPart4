@@ -12,6 +12,7 @@ import com.apple.foundationdb.Database;
 import com.apple.foundationdb.Transaction;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +42,20 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
   @Override
   public Set<Record> simpleSelect(String tableName, ComparisonPredicate predicate, boolean isUsingIndex) {
+    Set<Record> res = new HashSet<>();
+    // check table exists
+    List<String> tablePath = new ArrayList<>(); tablePath.add(tableName);
+    if (FDBHelper.doesSubdirectoryExists(tx, tablePath))
+    {
+      SelectIterator si = new SelectIterator(tableName, predicate, Iterator.Mode.READ, isUsingIndex, db);
+      Record rec = si.next();
+      while (rec != null)
+      {
+        res.add(rec);
+        rec = si.next();
+      }
+      return res;
+    }
 
     return null;
   }
