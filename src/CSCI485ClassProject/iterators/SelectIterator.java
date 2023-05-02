@@ -101,23 +101,41 @@ public class SelectIterator extends Iterator {
                 // get values
                 Object leftVal = r.getValueForGivenAttrName(cp.getLeftHandSideAttrName());
                 Object rightVal = r.getValueForGivenAttrName(cp.getRightHandSideAttrName());
-                System.out.println("leftVal: " + leftVal);
-                System.out.println("rightVal pre Algebra: " + rightVal);
+/*                System.out.println("leftVal: " + leftVal);
+                System.out.println("rightVal pre Algebra: " + rightVal);*/
                 if (leftType == AttributeType.INT)
                 {
                     // apply algebraic
                     if (cp.getRightHandSideOperator() == AlgebraicOperator.PRODUCT)
                     {
-                        System.out.println("entered product check");
+                        //System.out.println("entered product check");
                         long val1 = ComparisonUtils.convertObjectToLong(rightVal);
                         long val2 = ComparisonUtils.convertObjectToLong(cp.getRightHandSideValue());
-
                         rightVal = (Object)(val1 * val2);
-                        System.out.println("rightVal: " + rightVal);
+                        //System.out.println("rightVal: " + rightVal);
                     }
                     if (ComparisonUtils.compareTwoINT(leftVal, rightVal, cp.getOperator()))
                     {
-                        System.out.println("returning");
+                        return r;
+                    }
+                }
+                else if (leftType == AttributeType.DOUBLE)
+                {
+                    if (cp.getRightHandSideOperator() == AlgebraicOperator.PRODUCT)
+                    {
+                        double val1 = (double) rightVal;
+                        double val2 = (double) cp.getRightHandSideValue();
+                        rightVal = (Object)(val1 * val2);
+                    }
+                    if (ComparisonUtils.compareTwoDOUBLE(leftVal, rightVal, cp.getOperator()))
+                    {
+                        return r;
+                    }
+                }
+                // VARCHAR
+                else {
+                    if (ComparisonUtils.compareTwoVARCHAR(leftVal, rightVal, cp.getOperator()))
+                    {
                         return r;
                     }
                 }
