@@ -55,10 +55,8 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
         rec = si.next();
       }
 
-      return res;
     }
-
-    return null;
+    return res;
   }
 
   @Override
