@@ -30,6 +30,7 @@ public class ProjectIterator extends Iterator {
     public ProjectIterator(String tableName, String attrName, boolean isDuplicateFree, Database db)
     {
         this.db = db;
+        recordsImpl = new RecordsImpl();
         tx = FDBHelper.openTransaction(db);
         this.attrName = attrName;
         this.isDuplicateFree = isDuplicateFree;
