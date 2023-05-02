@@ -41,9 +41,13 @@ public class ProjectIterator extends Iterator {
     public Record next() {
         Record r = null;
         if (!isInitialized)
+        {
             r = recordsImpl.getFirst(cursor);
+            isInitialized = true;
+        }
         else
             r = recordsImpl.getNext(cursor);
+
         while (r != null)
         {
             Object val = r.getValueForGivenAttrName(attrName);
