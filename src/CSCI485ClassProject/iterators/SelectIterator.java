@@ -4,11 +4,9 @@ import CSCI485ClassProject.Cursor;
 import CSCI485ClassProject.Iterator;
 import CSCI485ClassProject.RecordsImpl;
 import CSCI485ClassProject.fdb.FDBHelper;
-import CSCI485ClassProject.models.ComparisonPredicate;
-import CSCI485ClassProject.models.IndexType;
-import CSCI485ClassProject.models.Record;
+import CSCI485ClassProject.models.*;
 
-import CSCI485ClassProject.models.TableMetadata;
+import CSCI485ClassProject.utils.ComparisonUtils;
 import CSCI485ClassProject.utils.IndexesUtils;
 import com.apple.foundationdb.Database;
 import com.apple.foundationdb.Transaction;
@@ -56,11 +54,11 @@ public class SelectIterator extends Iterator {
 
             leftCursor = recordsImpl.openCursor(tableName, attrName, predicate.getRightHandSideValue(), predicate.getOperator(), Cursor.Mode.READ, isUsingIndex);
             System.out.println("made leftCur");
-                //recordsImpl.get
-            // make cursor on the attribute, using index or not, next will just
         }
         else if (predicate.getPredicateType() == ComparisonPredicate.Type.TWO_ATTRS)
         {
+            // make generic cursor to traverse by pks
+            leftCursor = recordsImpl.openCursor(tableName, Cursor.Mode.READ);
 
         }
 
@@ -81,7 +79,42 @@ public class SelectIterator extends Iterator {
         }
         else if (cp.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR)
         {
+            Record r = null;
+            if (!hasReadLeftFirst)
+            {
+                hasReadLeftFirst = true;
+                r = recordsImpl.getFirst(leftCursor);
+            }
+            while (r != null)
+            {
+                // compare values and such
+                AttributeType leftType = cp.getLeftHandSideAttrType();
+                AttributeType rightType = cp.getRightHandSideAttrType();
+                if (leftType != rightType)
+                {
+                    System.out.println("Types don't match");
+                    return null;
+                }
+                // get values
+                Object leftVal = r.getValueForGivenAttrName(cp.getLeftHandSideAttrName());
+                Object rightVal = r.getValueForGivenAttrName(cp.getRightHandSideAttrName());
+                if (leftType == AttributeType.INT)
+                {
+                    // apply algebraic
+                    if (cp.getRightHandSideOperator() == AlgebraicOperator.PRODUCT)
+                    {
+                        long val1 = ComparisonUtils.convertObjectToLong(rightVal);
+                        long val2 = ComparisonUtils.convertObjectToLong(cp.getRightHandSideValue());
 
+                        rightVal = (Object)(val1 * val2);
+                    }
+                    if (ComparisonUtils.compareTwoINT(leftVal, rightVal, cp.getOperator()))
+                    {
+                        return r;
+                    }
+                }
+                r = recordsImpl.getNext(leftCursor);
+            }
         }
         return null;
     }

@@ -3,6 +3,17 @@ package CSCI485ClassProject.utils;
 import CSCI485ClassProject.models.ComparisonOperator;
 
 public class ComparisonUtils {
+  public static long convertObjectToLong(Object o)
+  {
+    long val1;
+    if (o instanceof Integer) {
+      val1 = new Long((Integer) o);
+    } else {
+      val1 = (long) o;
+    }
+    return val1;
+  }
+
   public static boolean compareTwoINT(Object obj1, Object obj2, ComparisonOperator cmp) {
     long val1;
     if (obj1 instanceof Integer) {

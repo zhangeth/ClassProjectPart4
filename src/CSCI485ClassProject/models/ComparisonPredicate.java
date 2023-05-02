@@ -34,16 +34,30 @@ public class ComparisonPredicate {
     return leftHandSideAttrName;
   }
 
+  public String getRightHandSideAttrName() {
+    return rightHandSideAttrName;
+  }
+
   public void setLeftHandSideAttrName(String leftHandSideAttrName) {
     this.leftHandSideAttrName = leftHandSideAttrName;
+  }
+  public void setRightHandSideAttrName(String rightHandSideAttrName) {
+    this.rightHandSideAttrName = rightHandSideAttrName;
   }
 
   public AttributeType getLeftHandSideAttrType() {
     return leftHandSideAttrType;
   }
+  public AttributeType getRightHandSideAttrType() {
+    return rightHandSideAttrType;
+  }
 
   public void setLeftHandSideAttrType(AttributeType leftHandSideAttrType) {
     this.leftHandSideAttrType = leftHandSideAttrType;
+  }
+
+  public void setRightHandSideAttrType(AttributeType rightHandSideAttrType) {
+    this.rightHandSideAttrType = rightHandSideAttrType;
   }
 
   public ComparisonOperator getOperator() {
@@ -58,8 +72,24 @@ public class ComparisonPredicate {
     return rightHandSideValue;
   }
 
+  public Object getRightHandSideValueAfterAlgebraic()
+  {
+    long val2;
+    if (rightHandSideValue instanceof Integer) {
+      val2 = new Long((Integer) rightHandSideValue);
+    } else {
+      val2 = (long) rightHandSideValue;
+    }
+    return null;
+  }
+
+
   public void setRightHandSideValue(Object rightHandSideValue) {
     this.rightHandSideValue = rightHandSideValue;
+  }
+
+  public AlgebraicOperator getRightHandSideOperator() {
+    return rightHandSideOperator;
   }
 
   public ComparisonPredicate() {
