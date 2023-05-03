@@ -56,7 +56,11 @@ public class ProjectIterator extends Iterator {
                 duplicateAttrPath.add(s);
             String dirStr = attrName + "Duplicates";
             duplicateAttrPath.add(dirStr);
-            dupSubspace = FDBHelper.createOrOpenSubspace(tx, duplicateAttrPath);
+
+            Transaction createTx = FDBHelper.openTransaction(db);
+            dupSubspace = FDBHelper.createOrOpenSubspace(createTx, duplicateAttrPath);
+            FDBHelper.commitTransaction(createTx);
+
             System.out.println("successfully created dupe subspace");
         }
     }
