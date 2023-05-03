@@ -275,6 +275,7 @@ public class Part4Test {
     assertNotNull(selectRes);
 
 
+
     Iterator emailRecordIterator = relAlgOperators.project(selectRes, Email, true);
     Set<String> expectedEmailSet = new HashSet<>();
     Set<String> actualEmailSet = new HashSet<>();

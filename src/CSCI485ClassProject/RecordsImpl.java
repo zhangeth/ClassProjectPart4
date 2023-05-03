@@ -30,7 +30,7 @@ public class RecordsImpl implements Records{
     db = FDBHelper.initialization();
   }
 
-  private TableMetadata getTableMetadataByTableName(Transaction tx, String tableName) {
+  public TableMetadata getTableMetadataByTableName(Transaction tx, String tableName) {
     TableMetadataTransformer tblMetadataTransformer = new TableMetadataTransformer(tableName);
     List<FDBKVPair> kvPairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, tx,
             tblMetadataTransformer.getTableAttributeStorePath());
