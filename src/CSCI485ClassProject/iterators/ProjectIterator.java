@@ -71,6 +71,10 @@ public class ProjectIterator extends Iterator {
         else
             r = recordsImpl.getNext(cursor);
 
+        for (FDBKVPair p : FDBHelper.getAllKeyValuePairsOfSubdirectory(db, tx, duplicateAttrPath))
+        {
+            System.out.println("pairs: " + p.getKey().toString());
+        }
         while (r != null)
         {
             Object val = r.getValueForGivenAttrName(attrName);
@@ -81,6 +85,8 @@ public class ProjectIterator extends Iterator {
                 {
                     Tuple keyTuple = new Tuple();
                     keyTuple = keyTuple.addObject(val);
+                    System.out.println("val: " + val.toString());
+
                     // check if exists in subspace first
                     if (FDBHelper.getCertainKeyValuePairInSubdirectory(dupSubspace, tx, keyTuple, duplicateAttrPath) == null)
                     {
