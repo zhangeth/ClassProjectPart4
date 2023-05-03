@@ -93,7 +93,7 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
     while (r != null)
     {
-      System.out.println("added r: " + r.toString());
+      System.out.println("added r: " + r.getValueForGivenAttrName(attrName));
       ans.add(r);
       r = pi.next();
     }
