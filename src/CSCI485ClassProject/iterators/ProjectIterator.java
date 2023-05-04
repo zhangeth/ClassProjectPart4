@@ -104,7 +104,6 @@ public class ProjectIterator extends Iterator {
 
                         FDBHelper.setFDBKVPair(dupSubspace, tx1, kvPair);
                         FDBHelper.commitTransaction(tx1);
-                        System.out.println("booty");
                     }
                     else {
                         System.out.print("yurt");
