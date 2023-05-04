@@ -100,14 +100,14 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
     if (isDuplicateFree)
     {
       // if dupes is enabled, use the subdirectory of the dupes to make the list, because this is auto sorted by fdb
-      Transaction readTX = FDBHelper.openTransaction(db);
-      for (FDBKVPair fdbkvPair : FDBHelper.getAllKeyValuePairsOfSubdirectory(db, readTX, pi.getDuplicateAttrPath()))
+      //Transaction readTX = FDBHelper.openTransaction(db);
+      for (FDBKVPair fdbkvPair : FDBHelper.getAllKeyValuePairsOfSubdirectory(db, pi.getDupeTransaction(), pi.getDuplicateAttrPath()))
       {
         Record rec = new Record();
         rec.setAttrNameAndValue(attrName, fdbkvPair.getKey().get(0));
         ans.add(rec);
       }
-      readTX.close();
+      //readTX.close();
     }
 
     return ans;

@@ -19,6 +19,7 @@ import java.util.List;
 public class ProjectIterator extends Iterator {
     private final Database db;
     private Transaction tx;
+    private Transaction dupeTx;
     private RecordsImpl recordsImpl;
     private String attrName;
     private String tableName;
@@ -33,7 +34,17 @@ public class ProjectIterator extends Iterator {
     DirectorySubspace dupSubspace;
 
     private void initDupeSubspace()
-    {}
+    {
+        // first, make unique subdir
+        duplicateAttrPath = new ArrayList<>(); duplicateAttrPath.add(this.toString());
+        String dirStr = attrName + "Duplicates";
+        duplicateAttrPath.add(dirStr);
+        dupSubspace = FDBHelper.createOrOpenSubspace(dupeTx, duplicateAttrPath);
+        //FDBHelper.commitTransaction(createTx);
+        System.out.println("successfully created dupe subspace");
+        if (FDBHelper.doesSubdirectoryExists(dupeTx, duplicateAttrPath))
+            System.out.println("exists");
+    }
 
     public ProjectIterator(){
         db = FDBHelper.initialization();
@@ -44,6 +55,11 @@ public class ProjectIterator extends Iterator {
         this.db = db;
         this.attrName = attrName;
         this.isDuplicateFree = isDuplicateFree;
+        if (isDuplicateFree)
+        {
+            dupeTx = FDBHelper.openTransaction(db);
+            initDupeSubspace();
+        }
         recordsImpl = new RecordsImpl();
         tx = FDBHelper.openTransaction(db);
     }
@@ -56,26 +72,7 @@ public class ProjectIterator extends Iterator {
         // make cursor on attrName, don't have to worry about index, just simple Cursor, and each record returned, get rid of other attrs
         cursor = recordsImpl.openCursor(tableName, Cursor.Mode.READ);
         // want to make subdirectory of attribute name, duplicate, add to duplicate table, and check it records are traversed
-        if (isDuplicateFree)
-        {
-            // first, just hardcode subdirectory
-            duplicateAttrPath = new ArrayList<>();
-            // get TableMetadata
-            TableMetadata tbm = recordsImpl.getTableMetadataByTableName(tx, tableName);
-            RecordsTransformer rt = new RecordsTransformer(tableName, tbm);
-            // make duplicate store under main data subdirectory
-            for (String s : rt.getTableRecordPath())
-                duplicateAttrPath.add(s);
-            String dirStr = attrName + "Duplicates";
-            duplicateAttrPath.add(dirStr);
-            // needs own tx to write to fdb
-            Transaction createTx = FDBHelper.openTransaction(db);
-            dupSubspace = FDBHelper.createOrOpenSubspace(createTx, duplicateAttrPath);
-            //FDBHelper.commitTransaction(createTx);
-            System.out.println("successfully created dupe subspace");
-            if (FDBHelper.doesSubdirectoryExists(createTx, duplicateAttrPath))
-                System.out.println("exists");
-        }
+
     }
     public ProjectIterator(Iterator iterator, String attrName, boolean isDuplicateFree, Database db)
     {
@@ -106,20 +103,18 @@ public class ProjectIterator extends Iterator {
                 {
                     Tuple keyTuple = new Tuple();
                     keyTuple = keyTuple.addObject(val);
-                    System.out.println("val: " + val.toString());
-                    Transaction tx1 = FDBHelper.openTransaction(db);
+
                     // check if exists in subspace first
-                    if (FDBHelper.getCertainKeyValuePairInSubdirectory(dupSubspace, tx1, keyTuple, duplicateAttrPath) == null)
+                    if (FDBHelper.getCertainKeyValuePairInSubdirectory(dupSubspace, dupeTx, keyTuple, duplicateAttrPath) == null)
                     {
                         // make dupe entry
                         Tuple valueTuple = new Tuple();
                         FDBKVPair kvPair = new FDBKVPair(duplicateAttrPath, keyTuple, valueTuple);
 
-                        FDBHelper.setFDBKVPair(dupSubspace, tx1, kvPair);
-                        FDBHelper.commitTransaction(tx1);
+                        FDBHelper.setFDBKVPair(dupSubspace, dupeTx, kvPair);
+                        //FDBHelper.commitTransaction(tx1);
                     }
                     else {
-                        tx1.close();
                         r = recordsImpl.getNext(cursor);
                         continue;
                     }
@@ -136,14 +131,22 @@ public class ProjectIterator extends Iterator {
     {
         return duplicateAttrPath;
     }
+    public Transaction getDupeTransaction()
+    {
+        return dupeTx;
+    }
 
     public void commit()
     {
+        if (isDuplicateFree)
+            FDBHelper.abortTransaction(dupeTx);
         FDBHelper.commitTransaction(tx);
     }
 
     public void abort()
     {
+        if (isDuplicateFree)
+            FDBHelper.abortTransaction(dupeTx);
         FDBHelper.abortTransaction(tx);
     }
 
