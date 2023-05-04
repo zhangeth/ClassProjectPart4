@@ -12,7 +12,6 @@ import CSCI485ClassProject.models.TableMetadata;
 import CSCI485ClassProject.utils.ComparisonUtils;
 import com.apple.foundationdb.Database;
 import com.apple.foundationdb.Transaction;
-import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -108,6 +107,7 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
         rec.setAttrNameAndValue(attrName, fdbkvPair.getKey().get(0));
         ans.add(rec);
       }
+      readTX.close();
     }
 
     return ans;
