@@ -279,6 +279,7 @@ public class Part4Test {
     Set<String> actualEmailSet = new HashSet<>();
 
     for (int i = 0; i < 50; i++) {
+      System.out.println("testing: " + i);
       Record record = emailRecordIterator.next();
       assertNotNull(record);
 

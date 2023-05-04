@@ -81,6 +81,9 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
   @Override
   public Iterator project(Iterator iterator, String attrName, boolean isDuplicateFree) {
+
+    if (iterator != null)
+      return new ProjectIterator(iterator, attrName, isDuplicateFree, db);
     return null;
   }
 
