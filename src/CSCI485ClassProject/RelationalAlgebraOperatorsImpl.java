@@ -117,7 +117,24 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
     ProjectIterator pi = new ProjectIterator(iterator, attrName, isDuplicateFree, db);
     Record r = pi.next();
 
-    return null;
+    while (r != null)
+    {
+      if (!isDuplicateFree)
+        ans.add(r);
+      r = pi.next();
+    }
+    if (isDuplicateFree)
+    {
+      // if dupes is enabled, use the subdirectory of the dupes to make the list, because this is auto sorted by fdb
+      for (FDBKVPair fdbkvPair : FDBHelper.getAllKeyValuePairsOfSubdirectory(db, pi.getDupeTransaction(), pi.getDuplicateAttrPath()))
+      {
+        Record rec = new Record();
+        rec.setAttrNameAndValue(attrName, fdbkvPair.getKey().get(0));
+        ans.add(rec);
+      }
+    }
+
+    return ans;
   }
 
   @Override

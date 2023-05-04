@@ -117,7 +117,7 @@ public class ProjectIterator extends Iterator {
                         //FDBHelper.commitTransaction(tx1);
                     }
                     else {
-                        r = recordsImpl.getNext(cursor);
+                        r = (isUsingIterator) ? iterator.next() : recordsImpl.getNext(cursor);
                         continue;
                     }
                 }
@@ -125,7 +125,7 @@ public class ProjectIterator extends Iterator {
                 ans.setAttrNameAndValue(attrName, val);
                 return ans;
             }
-            r = recordsImpl.getNext(cursor);
+            r = (isUsingIterator) ? iterator.next() : recordsImpl.getNext(cursor);
         }
         return null;
     }
