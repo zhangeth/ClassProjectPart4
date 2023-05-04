@@ -62,6 +62,8 @@ public class ProjectIterator extends Iterator {
             FDBHelper.commitTransaction(createTx);
 
             System.out.println("successfully created dupe subspace");
+            if (FDBHelper.doesSubdirectoryExists(tx, duplicateAttrPath))
+                System.out.println("exists");
         }
     }
     // idea: use Cursor to iterate over records, make "subrecord" of record, and return that
