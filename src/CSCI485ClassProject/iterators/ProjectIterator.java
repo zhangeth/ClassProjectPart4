@@ -26,10 +26,15 @@ public class ProjectIterator extends Iterator {
     private boolean isDuplicateFree;
     private boolean isInitialized = false;
     private boolean isUsingIterator = false;
+    private Iterator iterator;
     private Cursor cursor;
 
     // for duplicates, if checking for duplicates is enabled
     DirectorySubspace dupSubspace;
+
+    private void initDupeSubspace()
+    {}
+
     public ProjectIterator(){
         db = FDBHelper.initialization();
         recordsImpl = new RecordsImpl();
@@ -66,15 +71,18 @@ public class ProjectIterator extends Iterator {
             // needs own tx to write to fdb
             Transaction createTx = FDBHelper.openTransaction(db);
             dupSubspace = FDBHelper.createOrOpenSubspace(createTx, duplicateAttrPath);
-            FDBHelper.commitTransaction(createTx);
-/*            System.out.println("successfully created dupe subspace");
-            if (FDBHelper.doesSubdirectoryExists(tx, duplicateAttrPath))
-                System.out.println("exists");*/
+            //FDBHelper.commitTransaction(createTx);
+            System.out.println("successfully created dupe subspace");
+            if (FDBHelper.doesSubdirectoryExists(createTx, duplicateAttrPath))
+                System.out.println("exists");
         }
     }
     public ProjectIterator(Iterator iterator, String attrName, boolean isDuplicateFree, Database db)
     {
         this(attrName, isDuplicateFree, db);
+        // use iterator instead of tablename
+        //this.iterator =
+
     }
 
     // idea: use Cursor to iterate over records, make "subrecord" of record, and return that
