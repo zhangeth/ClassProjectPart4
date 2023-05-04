@@ -25,6 +25,7 @@ public class ProjectIterator extends Iterator {
     private List<String> duplicateAttrPath;
     private boolean isDuplicateFree;
     private boolean isInitialized = false;
+    private boolean isUsingIterator = false;
     private Cursor cursor;
 
     // for duplicates, if checking for duplicates is enabled
@@ -33,15 +34,20 @@ public class ProjectIterator extends Iterator {
         db = FDBHelper.initialization();
         recordsImpl = new RecordsImpl();
     }
+    public ProjectIterator(String attrName, boolean isDuplicateFree, Database db)
+    {
+        this.db = db;
+        this.attrName = attrName;
+        this.isDuplicateFree = isDuplicateFree;
+        recordsImpl = new RecordsImpl();
+        tx = FDBHelper.openTransaction(db);
+    }
+
     // public Cursor(Mode mode, String tableName, TableMetadata tableMetadata, Transaction tx)
     public ProjectIterator(String tableName, String attrName, boolean isDuplicateFree, Database db)
     {
-        this.db = db;
-        recordsImpl = new RecordsImpl();
-        tx = FDBHelper.openTransaction(db);
+        this(attrName, isDuplicateFree, db);
         this.tableName = tableName;
-        this.attrName = attrName;
-        this.isDuplicateFree = isDuplicateFree;
         // make cursor on attrName, don't have to worry about index, just simple Cursor, and each record returned, get rid of other attrs
         cursor = recordsImpl.openCursor(tableName, Cursor.Mode.READ);
         // want to make subdirectory of attribute name, duplicate, add to duplicate table, and check it records are traversed
@@ -52,20 +58,25 @@ public class ProjectIterator extends Iterator {
             // get TableMetadata
             TableMetadata tbm = recordsImpl.getTableMetadataByTableName(tx, tableName);
             RecordsTransformer rt = new RecordsTransformer(tableName, tbm);
+            // make duplicate store under main data subdirectory
             for (String s : rt.getTableRecordPath())
                 duplicateAttrPath.add(s);
             String dirStr = attrName + "Duplicates";
             duplicateAttrPath.add(dirStr);
-
+            // needs own tx to write to fdb
             Transaction createTx = FDBHelper.openTransaction(db);
             dupSubspace = FDBHelper.createOrOpenSubspace(createTx, duplicateAttrPath);
             FDBHelper.commitTransaction(createTx);
-
-            System.out.println("successfully created dupe subspace");
+/*            System.out.println("successfully created dupe subspace");
             if (FDBHelper.doesSubdirectoryExists(tx, duplicateAttrPath))
-                System.out.println("exists");
+                System.out.println("exists");*/
         }
     }
+    public ProjectIterator(Iterator iterator, String attrName, boolean isDuplicateFree, Database db)
+    {
+        this(attrName, isDuplicateFree, db);
+    }
+
     // idea: use Cursor to iterate over records, make "subrecord" of record, and return that
     public Record next() {
         Record r = null;
@@ -77,10 +88,6 @@ public class ProjectIterator extends Iterator {
         else
             r = recordsImpl.getNext(cursor);
 
-/*        for (FDBKVPair p : FDBHelper.getAllKeyValuePairsOfSubdirectory(db, tx, duplicateAttrPath))
-        {
-            System.out.println("pairs: " + p.getKey().toString());
-        }*/
         while (r != null)
         {
             Object val = r.getValueForGivenAttrName(attrName);
@@ -96,8 +103,6 @@ public class ProjectIterator extends Iterator {
                     // check if exists in subspace first
                     if (FDBHelper.getCertainKeyValuePairInSubdirectory(dupSubspace, tx1, keyTuple, duplicateAttrPath) == null)
                     {
-                        // want to make and commit transaction, since back to back records could have dupes
-
                         // make dupe entry
                         Tuple valueTuple = new Tuple();
                         FDBKVPair kvPair = new FDBKVPair(duplicateAttrPath, keyTuple, valueTuple);
@@ -107,7 +112,6 @@ public class ProjectIterator extends Iterator {
                     }
                     else {
                         tx1.close();
-                        System.out.print("yurt");
                         r = recordsImpl.getNext(cursor);
                         continue;
                     }

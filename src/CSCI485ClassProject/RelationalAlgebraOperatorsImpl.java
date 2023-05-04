@@ -99,7 +99,7 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
     }
     if (isDuplicateFree)
     {
-      // if dupes is enabled, use the subdirectory of the dupes to make the list
+      // if dupes is enabled, use the subdirectory of the dupes to make the list, because this is auto sorted by fdb
       Transaction readTX = FDBHelper.openTransaction(db);
       for (FDBKVPair fdbkvPair : FDBHelper.getAllKeyValuePairsOfSubdirectory(db, readTX, pi.getDuplicateAttrPath()))
       {
@@ -115,6 +115,7 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
   @Override
   public List<Record> simpleProject(Iterator iterator, String attrName, boolean isDuplicateFree) {
+
     return null;
   }
 

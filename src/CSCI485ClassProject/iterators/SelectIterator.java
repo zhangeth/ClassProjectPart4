@@ -29,7 +29,6 @@ public class SelectIterator extends Iterator {
     boolean hasReadLeftFirst = false;
     boolean hasReadRightFirst = false;
 
-
     public SelectIterator()
     {
         db = FDBHelper.initialization();
@@ -81,7 +80,6 @@ public class SelectIterator extends Iterator {
             Record r = null;
             if (!hasReadLeftFirst)
             {
-                // System.out.println("Entered two block");
                 hasReadLeftFirst = true;
                 r = recordsImpl.getFirst(leftCursor);
             }
