@@ -85,7 +85,7 @@ public class ProjectIterator extends Iterator {
     // if using cursor, do the same but call iterator.next
     public Record next() {
         Record r = null;
-        if (!isInitialized && !isUsingIterator)
+        if (!isInitialized)
         {
             r = (isUsingIterator) ? iterator.next() : recordsImpl.getFirst(cursor);
             isInitialized = true;
