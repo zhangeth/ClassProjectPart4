@@ -120,6 +120,10 @@ public class ProjectIterator extends Iterator {
         }
         return null;
     }
+    public List<String> getDuplicateAttrPath()
+    {
+        return duplicateAttrPath;
+    }
 
     public void commit()
     {

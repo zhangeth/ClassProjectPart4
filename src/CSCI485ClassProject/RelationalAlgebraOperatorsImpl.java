@@ -12,6 +12,7 @@ import CSCI485ClassProject.models.TableMetadata;
 import CSCI485ClassProject.utils.ComparisonUtils;
 import com.apple.foundationdb.Database;
 import com.apple.foundationdb.Transaction;
+import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,7 +31,6 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
     db = FDBHelper.initialization();
     tx = FDBHelper.openTransaction(db);
   }
-
 
   @Override
   public Iterator select(String tableName, ComparisonPredicate predicate, Iterator.Mode mode, boolean isUsingIndex) {
@@ -64,8 +64,8 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
         res.add(rec);
         rec = si.next();
       }
-
     }
+
     return res;
   }
 
@@ -94,8 +94,20 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
     while (r != null)
     {
       System.out.println("added r: " + r.getValueForGivenAttrName(attrName));
-      ans.add(r);
+      if (!isDuplicateFree)
+        ans.add(r);
       r = pi.next();
+    }
+    if (isDuplicateFree)
+    {
+      // if dupes is enabled, use the subdirectory of the dupes to make the list
+      Transaction readTX = FDBHelper.openTransaction(db);
+      for (FDBKVPair fdbkvPair : FDBHelper.getAllKeyValuePairsOfSubdirectory(db, readTX, pi.getDuplicateAttrPath()))
+      {
+        Record rec = new Record();
+        rec.setAttrNameAndValue(attrName, fdbkvPair.getKey().get(0));
+        ans.add(rec);
+      }
     }
 
     return ans;

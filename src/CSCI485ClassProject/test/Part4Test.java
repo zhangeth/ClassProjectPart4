@@ -274,8 +274,6 @@ public class Part4Test {
     Iterator selectRes = relAlgOperators.select(EmployeeTableName, predicate, Iterator.Mode.READ_WRITE, false);
     assertNotNull(selectRes);
 
-
-
     Iterator emailRecordIterator = relAlgOperators.project(selectRes, Email, true);
     Set<String> expectedEmailSet = new HashSet<>();
     Set<String> actualEmailSet = new HashSet<>();
