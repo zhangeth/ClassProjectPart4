@@ -92,12 +92,12 @@ public class ProjectIterator extends Iterator {
                     Tuple keyTuple = new Tuple();
                     keyTuple = keyTuple.addObject(val);
                     System.out.println("val: " + val.toString());
-
+                    Transaction tx1 = FDBHelper.openTransaction(db);
                     // check if exists in subspace first
-                    if (FDBHelper.getCertainKeyValuePairInSubdirectory(dupSubspace, tx, keyTuple, duplicateAttrPath) == null)
+                    if (FDBHelper.getCertainKeyValuePairInSubdirectory(dupSubspace, tx1, keyTuple, duplicateAttrPath) == null)
                     {
                         // want to make and commit transaction, since back to back records could have dupes
-                        Transaction tx1 = FDBHelper.openTransaction(db);
+
                         // make dupe entry
                         Tuple valueTuple = new Tuple();
                         FDBKVPair kvPair = new FDBKVPair(duplicateAttrPath, keyTuple, valueTuple);
@@ -106,6 +106,7 @@ public class ProjectIterator extends Iterator {
                         FDBHelper.commitTransaction(tx1);
                     }
                     else {
+                        tx1.close();
                         System.out.print("yurt");
                         r = recordsImpl.getNext(cursor);
                         continue;
