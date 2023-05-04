@@ -92,7 +92,7 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
     while (r != null)
     {
-      System.out.println("added r: " + r.getValueForGivenAttrName(attrName));
+//      System.out.println("added r: " + r.getValueForGivenAttrName(attrName));
       if (!isDuplicateFree)
         ans.add(r);
       r = pi.next();
@@ -100,14 +100,12 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
     if (isDuplicateFree)
     {
       // if dupes is enabled, use the subdirectory of the dupes to make the list, because this is auto sorted by fdb
-      //Transaction readTX = FDBHelper.openTransaction(db);
       for (FDBKVPair fdbkvPair : FDBHelper.getAllKeyValuePairsOfSubdirectory(db, pi.getDupeTransaction(), pi.getDuplicateAttrPath()))
       {
         Record rec = new Record();
         rec.setAttrNameAndValue(attrName, fdbkvPair.getKey().get(0));
         ans.add(rec);
       }
-      //readTX.close();
     }
 
     return ans;
@@ -115,6 +113,9 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
   @Override
   public List<Record> simpleProject(Iterator iterator, String attrName, boolean isDuplicateFree) {
+    List<Record> ans = new ArrayList<>();
+    ProjectIterator pi = new ProjectIterator(iterator, attrName, isDuplicateFree, db);
+    Record r = pi.next();
 
     return null;
   }

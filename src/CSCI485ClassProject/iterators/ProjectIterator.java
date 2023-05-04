@@ -77,21 +77,23 @@ public class ProjectIterator extends Iterator {
     public ProjectIterator(Iterator iterator, String attrName, boolean isDuplicateFree, Database db)
     {
         this(attrName, isDuplicateFree, db);
-        // use iterator instead of tablename
-        //this.iterator =
-
+        this.iterator = iterator;
+        isUsingIterator = true;
     }
 
     // idea: use Cursor to iterate over records, make "subrecord" of record, and return that
+    // if using cursor, do the same but call iterator.next
     public Record next() {
         Record r = null;
-        if (!isInitialized)
+        if (!isInitialized && !isUsingIterator)
         {
-            r = recordsImpl.getFirst(cursor);
+            r = (isUsingIterator) ? iterator.next() : recordsImpl.getFirst(cursor);
             isInitialized = true;
         }
         else
-            r = recordsImpl.getNext(cursor);
+        {
+            r = (isUsingIterator) ? iterator.next() : recordsImpl.getNext(cursor);
+        }
 
         while (r != null)
         {
