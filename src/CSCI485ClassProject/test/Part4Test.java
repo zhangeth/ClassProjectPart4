@@ -311,7 +311,6 @@ public class Part4Test {
 
       assertEquals(StatusCode.SUCCESS, records.insertRecord(DepartmentTableName, DepartmentTablePKAttributes, primaryKeyVal, DepartmentTableNonPKAttributeNames, nonPrimaryKeyVal));
     }
-    System.out.println("first part test3 passed");
 
     ComparisonPredicate nonePredicate = new ComparisonPredicate();
     Iterator employeeIterator = relAlgOperators.select(EmployeeTableName, nonePredicate, Iterator.Mode.READ, false);
@@ -333,7 +332,6 @@ public class Part4Test {
 
       expectedRecordSet.add(joinedRecord);
     }
-    System.out.println("second part test3 passed");
 
     Set<Record> actualRecordSet = new HashSet<>();
     while (true) {

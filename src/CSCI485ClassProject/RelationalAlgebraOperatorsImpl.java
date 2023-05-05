@@ -2,6 +2,7 @@ package CSCI485ClassProject;
 
 import CSCI485ClassProject.fdb.FDBHelper;
 import CSCI485ClassProject.fdb.FDBKVPair;
+import CSCI485ClassProject.iterators.JoinIterator;
 import CSCI485ClassProject.iterators.ProjectIterator;
 import CSCI485ClassProject.iterators.SelectIterator;
 import CSCI485ClassProject.models.AssignmentExpression;
@@ -12,6 +13,7 @@ import CSCI485ClassProject.models.TableMetadata;
 import CSCI485ClassProject.utils.ComparisonUtils;
 import com.apple.foundationdb.Database;
 import com.apple.foundationdb.Transaction;
+import jdk.nashorn.internal.scripts.JO;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -145,8 +147,7 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
     if (!ComparisonUtils.checkComparisonPredicateTypes(predicate))
       return null;
     // idea: read one iterator into temporary table, use then you don't have to make new iterators
-
-    return null;
+    return new JoinIterator(outerIterator, innerIterator, predicate, attrNames, db);
   }
 
   @Override
