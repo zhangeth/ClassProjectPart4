@@ -135,7 +135,7 @@ public class JoinIterator extends Iterator {
             List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
             // loop through values in outer subspace
             System.out.println("rightVal: " + rightVal);
-            for (; currentOuterIdx < outerSize; currentOuterIdx++)
+            for (; currentOuterIdx < pairs.size(); currentOuterIdx++)
             {
                 Object leftVal = pairs.get(currentOuterIdx).getKey().get(0);
                 System.out.println("leftVal: " + leftVal);
