@@ -49,8 +49,6 @@ public class JoinIterator extends Iterator {
         String dirStr = "outer";
         outerPath.add(dirStr);
         outerSubspace = FDBHelper.createOrOpenSubspace(outerTx, outerPath);
-        //FDBHelper.commitTransaction(createTx);
-        System.out.println("successfully created outer subspace");
     }
     public JoinIterator()
     {
@@ -90,43 +88,6 @@ public class JoinIterator extends Iterator {
     }
     private void loopThroughOuter()
     {
-        String attrName = predicate.getLeftHandSideAttrName();
-        System.out.println("attr in question: " + attrName);
-        outerSize = 0;
-        Record r = outerIterator.next();
-        System.out.println("looping for attr: " + predicate.getLeftHandSideAttrName());
-        for (Map.Entry e :  r.getMapAttrNameToValue().entrySet())
-        {
-            System.out.println("key: " + e.getKey() + "val: " + e.getValue());
-        }
-
-        while (r != null)
-        {
-            System.out.println("loopin over: " + r.getValueForGivenAttrName("SSN") + " who's dno: " + r.getValueForGivenAttrName("DNO"));
-
-            // commit value of the predicate to the thing
-            Tuple keyTuple = new Tuple();
-            keyTuple = keyTuple.addObject(r.getValueForGivenAttrName(attrName));
-            // want to add pk as value, so can fetch when matched
-            Tuple valueTuple = new Tuple();
-            // could alternate thingies, and when there's a duplicate, then you know
-            for (Map.Entry<String, Record.Value> entry : r.getMapAttrNameToValue().entrySet()) {
-                valueTuple = valueTuple.add(entry.getKey());
-                valueTuple = valueTuple.addObject(entry.getValue().getValue());
-            }
-
-            //valueTuple = valueTuple.addObject(r);
-            FDBKVPair kvPair = new FDBKVPair(outerPath, keyTuple, valueTuple);
-            FDBHelper.setFDBKVPair(outerSubspace, outerTx, kvPair);
-
-            r = outerIterator.next();
-            outerSize++;
-        }
-        List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
-        System.out.println("outer size: " + outerSize);
-        System.out.println("pairs size: " + pairs.size());
-
-        // theory:
         if (!b)
         {
             cursor =  new Cursor(Cursor.Mode.READ, outerTableName, RecordsImpl.getTableMetadataByTableNameYuh(outerTx, outerTableName, db), outerTx);
@@ -231,7 +192,6 @@ public class JoinIterator extends Iterator {
 
                         }
                         currentOuterIdx++;
-                        System.out.println("Matched employee: " + res.getValueForGivenAttrName("SSN") + " with: " + res.getValueForGivenAttrName("Employee.DNO"));
                         return res;
                     }
                     reco = recordsImpl.getNext(cursor);
