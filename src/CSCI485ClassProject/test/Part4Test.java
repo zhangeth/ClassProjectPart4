@@ -345,13 +345,13 @@ public class Part4Test {
         System.out.println("key: " + entry.getKey() + ", val: " + entry.getValue().getValue());
       }
     }
-    for (Record rec : expectedRecordSet)
+/*    for (Record rec : expectedRecordSet)
     {
       for (Map.Entry<String, Record.Value> entry : rec.getMapAttrNameToValue().entrySet()) {
 
           System.out.println("expected key: " + entry.getKey() + ", exp val: " + entry.getValue().getValue());
       }
-    }
+    }*/
     assertEquals(expectedRecordSet, actualRecordSet);
     joinResIterator.commit();
     System.out.println("Test3 passed!");
