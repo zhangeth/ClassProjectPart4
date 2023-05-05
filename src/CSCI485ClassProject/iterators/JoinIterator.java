@@ -97,7 +97,7 @@ public class JoinIterator extends Iterator {
             keyTuple = keyTuple.addObject(r.getValueForGivenAttrName(attrName));
 
             Tuple valueTuple = new Tuple();
-            valueTuple = valueTuple.addObject(r);
+            //valueTuple = valueTuple.addObject(r);
             FDBKVPair kvPair = new FDBKVPair(outerPath, keyTuple, valueTuple);
             FDBHelper.setFDBKVPair(outerSubspace, outerTx, kvPair);
 
