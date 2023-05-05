@@ -47,7 +47,7 @@ public class SelectIterator extends Iterator {
         this.isUsingIndex = isUsingIndex;
 
         // make appropriate cursor, according to predicate type
-        if (predicate.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR)
+        if (predicate.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR || predicate.getPredicateType() == ComparisonPredicate.Type.NONE)
         {
             String attrName = predicate.getLeftHandSideAttrName();
 
