@@ -190,10 +190,13 @@ public class JoinIterator extends Iterator {
                         for (Map.Entry<String, Record.Value> entry : reco.getMapAttrNameToValue().entrySet())
                         {
                             boolean found = false;
-                            for (String s :attrNames)
+                            if (attrNames != null)
                             {
-                                if (entry.getKey().equals(s))
-                                    found = true;
+                                for (String s :attrNames)
+                                {
+                                    if (entry.getKey().equals(s))
+                                        found = true;
+                                }
                             }
                             if (!found)
                                 res.setAttrNameAndValue(entry.getKey(), entry.getValue().getValue());
@@ -204,11 +207,15 @@ public class JoinIterator extends Iterator {
                         for (Map.Entry<String, Record.Value> entry : rightRecord.getMapAttrNameToValue().entrySet()) {
                             String key = entry.getKey();
                             boolean found = false;
-                            for (String s :attrNames)
+                            if (attrNames != null)
                             {
-                                if (entry.getKey().equals(s))
-                                    found = true;
+                                for (String s :attrNames)
+                                {
+                                    if (entry.getKey().equals(s))
+                                        found = true;
+                                }
                             }
+
                             if (!found)
                             {
                                 if (currMap.containsKey(key))
