@@ -339,6 +339,7 @@ public class Part4Test {
     }
     if (actualRecordSet.size() == expectedRecordSet.size())
       System.out.println("poggers");
+
     for (Record r : actualRecordSet)
     {
       for (Map.Entry<String, Record.Value> entry : r.getMapAttrNameToValue().entrySet()) {

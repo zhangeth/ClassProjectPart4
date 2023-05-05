@@ -91,10 +91,9 @@ public class JoinIterator extends Iterator {
         System.out.println("looping for attr: " + predicate.getLeftHandSideAttrName());
         for (Map.Entry e :  r.getMapAttrNameToValue().entrySet())
         {
-            System.out.println("keey: " + e.getKey() + "val: " + e.getValue());
+            System.out.println("key: " + e.getKey() + "val: " + e.getValue());
         }
 
-        System.out.println(r.getValueForGivenAttrName("Name"));
         while (r != null)
         {
             outerSize++;
@@ -146,7 +145,7 @@ public class JoinIterator extends Iterator {
             // want to use index of outerIdx to keep track of what records have been made
             List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
             // loop through values in outer subspace
-            System.out.println("rightVal: " + rightVal);
+            // System.out.println("rightVal: " + rightVal);
             for (; currentOuterIdx < pairs.size(); currentOuterIdx++)
             {
                 FDBKVPair p = pairs.get(currentOuterIdx);
@@ -157,7 +156,7 @@ public class JoinIterator extends Iterator {
                     Record res = new Record();
                     List<Object> valueObjs = p.getValue().getItems();
                     // add the value alternating thingies
-                    for (int i = 0; i < valueObjs.size() / 2; i++)
+                    for (int i = 0; i < valueObjs.size() - 1; i++)
                     {
                         res.setAttrNameAndValue((String)valueObjs.get(i), valueObjs.get(++i));
                     }
