@@ -19,6 +19,7 @@ import com.apple.foundationdb.tuple.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class JoinIterator extends Iterator {
@@ -80,6 +81,10 @@ public class JoinIterator extends Iterator {
         outerSize = 0;
         Record r = outerIterator.next();
         System.out.println("looping for attr: " + predicate.getLeftHandSideAttrName());
+        for (Map.Entry e :  r.getMapAttrNameToValue().entrySet())
+        {
+            System.out.println("keey: " + e.getKey() + "val: " + e.getValue());
+        }
 
         System.out.println(r.getValueForGivenAttrName("Name"));
         while (r != null)
