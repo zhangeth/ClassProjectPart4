@@ -64,7 +64,7 @@ public class SelectIterator extends Iterator {
     public Record next()
     {
         // use only left cursor if one predicate
-        if (cp.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR)
+        if (cp.getPredicateType() == ComparisonPredicate.Type.ONE_ATTR || cp.getPredicateType() == ComparisonPredicate.Type.NONE)
         {
             if (hasReadLeftFirst)
                 return recordsImpl.getNext(leftCursor);
