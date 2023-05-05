@@ -117,6 +117,30 @@ public class JoinIterator extends Iterator {
             r = outerIterator.next();
         }
     }
+
+    private Object applyAlgebraic(Object rightVal)
+    {
+        if (predicate.getRightHandSideAttrType() == AttributeType.INT)
+        {
+            long val1 = ComparisonUtils.convertObjectToLong(rightVal);
+            if (predicate.getRightHandSideOperator() == AlgebraicOperator.PRODUCT)
+            {
+                long val2 = ComparisonUtils.convertObjectToLong(predicate.getRightHandSideValue());
+                rightVal = (Object)(val1 * val2);
+            }
+
+        }
+        else if (predicate.getRightHandSideAttrType() == AttributeType.DOUBLE)
+        {
+            double val1 = (double) rightVal;
+            double val2 = (double) predicate.getRightHandSideValue();
+            if (predicate.getRightHandSideOperator() == AlgebraicOperator.PRODUCT) {
+                rightVal = (Object) (val1 * val2);
+            }
+        }
+        return rightVal;
+    }
+
     public Record next()
     {
         List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
@@ -134,24 +158,7 @@ public class JoinIterator extends Iterator {
         {
             Object rightVal = rightRecord.getValueForGivenAttrName(predicate.getRightHandSideAttrName());
             // check type of right Record for applying algebraic, and apply it
-            if (predicate.getRightHandSideAttrType() == AttributeType.INT)
-            {
-                long val1 = ComparisonUtils.convertObjectToLong(rightVal);
-                if (predicate.getRightHandSideOperator() == AlgebraicOperator.PRODUCT)
-                {
-                    long val2 = ComparisonUtils.convertObjectToLong(predicate.getRightHandSideValue());
-                    rightVal = (Object)(val1 * val2);
-                }
-
-            }
-            else if (predicate.getRightHandSideAttrType() == AttributeType.DOUBLE)
-            {
-                double val1 = (double) rightVal;
-                double val2 = (double) predicate.getRightHandSideValue();
-                if (predicate.getRightHandSideOperator() == AlgebraicOperator.PRODUCT) {
-                    rightVal = (Object) (val1 * val2);
-                }
-            }
+            rightVal = applyAlgebraic(rightVal);
             // want to use index of outerIdx to keep track of what records have been made
 
             for (int idx = 0; idx < pairs.size(); idx++)
