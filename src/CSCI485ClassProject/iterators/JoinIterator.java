@@ -186,7 +186,7 @@ public class JoinIterator extends Iterator {
                     }
 
                     currentOuterIdx = idx;
-                    System.out.println("Matched employee: " + res.getValueForGivenAttrName("SSN") + " with: " + res.getValueForGivenAttrName("DNO"));
+                    System.out.println("Matched employee: " + res.getValueForGivenAttrName("SSN") + " with: " + res.getValueForGivenAttrName("Employee.DNO"));
                     return res;
                 }
             }
