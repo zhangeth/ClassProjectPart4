@@ -135,7 +135,7 @@ public class JoinIterator extends Iterator {
             while (butt != null)
             {
                 count++;
-                butt = recordsImpl.getFirst(c);
+                butt = recordsImpl.getNext(c);
 
             }
             System.out.println(count + " count");
