@@ -106,7 +106,7 @@ public class JoinIterator extends Iterator {
             // could alternate thingies, and when there's a duplicate, then you know
             for (Map.Entry<String, Record.Value> entry : r.getMapAttrNameToValue().entrySet()) {
                 valueTuple = valueTuple.add(entry.getKey());
-                valueTuple = valueTuple.addObject(entry.getValue());
+                valueTuple = valueTuple.addObject(entry.getValue().getValue());
             }
 
             //valueTuple = valueTuple.addObject(r);
