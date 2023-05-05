@@ -120,9 +120,11 @@ public class JoinIterator extends Iterator {
             // want to use index of outerIdx to keep track of what records have been made
             List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
             // loop through values in outer subspace
+            System.out.println("rightVal: " + rightVal);
             for (; currentOuterIdx < outerSize; currentOuterIdx++)
             {
                 Object leftVal = pairs.get(currentOuterIdx).getKey().get(0);
+                System.out.println("leftVal: " + leftVal);
                 if (ComparisonUtils.compareTwoObjects(leftVal, rightVal, predicate))
                 {
                     // return record, with the correct processing
