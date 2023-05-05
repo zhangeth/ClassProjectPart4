@@ -145,7 +145,7 @@ public class JoinIterator extends Iterator {
     {
         List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
         Record rightRecord;
-        // now when calling next on inner Iterator, can loop through outer and compare, inner is dept
+        // now when calling next on inner Iterator, can loop through outer and compare, inner is dept currRecord refers to current inner record
         if (currentOuterIdx >= pairs.size() || currRecord == null) {
             rightRecord = innerIterator.next();
             currRecord = rightRecord;
@@ -153,17 +153,16 @@ public class JoinIterator extends Iterator {
         else {
             rightRecord = currRecord;
         }
-
+        // logically, this is wrong. what you want to do, is use currentIdx, to keep track of where you are in the outer. And only call next on inner, when you reach end of outer
         while (rightRecord != null)
         {
             Object rightVal = rightRecord.getValueForGivenAttrName(predicate.getRightHandSideAttrName());
             // check type of right Record for applying algebraic, and apply it
             rightVal = applyAlgebraic(rightVal);
-            // want to use index of outerIdx to keep track of what records have been made
-
-            for (int idx = 0; idx < pairs.size(); idx++)
+            // loop through all of outer subdir
+            for (; currentOuterIdx < pairs.size(); currentOuterIdx++)
             {
-                FDBKVPair p = pairs.get(idx);
+                FDBKVPair p = pairs.get(currentOuterIdx);
                 Object leftVal = p.getKey().get(0);
                 //System.out.println("leftVal: " + leftVal);
                 if (ComparisonUtils.compareTwoObjects(leftVal, rightVal, predicate))
@@ -190,15 +189,15 @@ public class JoinIterator extends Iterator {
                             res.setAttrNameAndValue(key, entry.getValue().getValue());
                         }
                     }
-
-                    currentOuterIdx = idx;
+                    currentOuterIdx++;
                     System.out.println("Matched employee: " + res.getValueForGivenAttrName("SSN") + " with: " + res.getValueForGivenAttrName("Employee.DNO"));
                     return res;
                 }
             }
-            // if reached end, reset outerIdx
+            // if reached end, reset outerIdx, and change rightRecord;
             currentOuterIdx = 0;
             rightRecord = innerIterator.next();
+            currRecord = rightRecord;
         }
 
         return null;
