@@ -190,7 +190,7 @@ public class JoinIterator extends Iterator {
                     {
                         Record res = new Record();
                         // add the value alternating thingies
-                        for (Map.Entry<String, Record.Value> entry : rightRecord.getMapAttrNameToValue().entrySet())
+                        for (Map.Entry<String, Record.Value> entry : reco.getMapAttrNameToValue().entrySet())
                         {
                             res.setAttrNameAndValue(entry.getKey(), entry.getValue().getValue());
                         }
