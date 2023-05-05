@@ -75,6 +75,7 @@ public class JoinIterator extends Iterator {
             // cast to selectIterators for now
             SelectIterator si = (SelectIterator)innerIterator;
             innerTableName = si.getTableName();
+            System.out.println("printing innername" + innerTableName);
         }
         if (outerIterator instanceof  SelectIterator)
         {
@@ -160,6 +161,7 @@ public class JoinIterator extends Iterator {
                     {
                         res.setAttrNameAndValue((String)valueObjs.get(i), valueObjs.get(++i));
                     }
+
                     HashMap<String, Record.Value> currMap = res.getMapAttrNameToValue();
                     // now add right Record
                     for (Map.Entry<String, Record.Value> entry : rightRecord.getMapAttrNameToValue().entrySet()) {
@@ -167,11 +169,11 @@ public class JoinIterator extends Iterator {
                         if (currMap.containsKey(key))
                         {
                             res.updateJoinedRecord(key, outerTableName);
-                            String str = innerTableName + "." + entry.getKey();
-                            res.setAttrNameAndValue(str, entry.getValue());
+                            String str = innerTableName + "." + key;
+                            res.setAttrNameAndValue(str, entry.getValue().getValue());
                         }
                         else {
-                            res.setAttrNameAndValue(key, entry.getValue());
+                            res.setAttrNameAndValue(key, entry.getValue().getValue());
                         }
                     }
 
