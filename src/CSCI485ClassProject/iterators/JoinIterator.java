@@ -34,6 +34,7 @@ public class JoinIterator extends Iterator {
     private DirectorySubspace outerSubspace;
     private String outerTableName;
     private String innerTableName;
+    private Record currRecord;
 
     private int currentOuterIdx;
     private int outerSize;
@@ -118,8 +119,15 @@ public class JoinIterator extends Iterator {
     }
     public Record next()
     {
+        List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
+        Record rightRecord;
         // now when calling next on inner Iterator, can loop through outer and compare
-        Record rightRecord = innerIterator.next();
+        if (currentOuterIdx >= pairs.size() || currRecord == null) {
+            rightRecord = innerIterator.next();
+            currRecord = rightRecord;
+        }
+        else
+            rightRecord = currRecord;
 
         while (rightRecord != null)
         {
@@ -144,9 +152,7 @@ public class JoinIterator extends Iterator {
                 }
             }
             // want to use index of outerIdx to keep track of what records have been made
-            List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
-            // loop through values in outer subspace
-            // System.out.println("rightVal: " + rightVal);
+
             for (int idx = 0; idx < pairs.size(); idx++)
             {
                 FDBKVPair p = pairs.get(idx);
@@ -177,7 +183,8 @@ public class JoinIterator extends Iterator {
                         }
                     }
 
-                    currentOuterIdx++;
+                    currentOuterIdx = idx;
+                    // I understand why, it's calling next on dno, n
                     return res;
                     // won't there be repeats?
                 }

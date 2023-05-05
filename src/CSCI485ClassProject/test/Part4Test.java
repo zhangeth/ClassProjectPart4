@@ -337,8 +337,7 @@ public class Part4Test {
       }
       actualRecordSet.add(record);
     }
-    if (actualRecordSet.size() == expectedRecordSet.size())
-      System.out.println("poggers");
+
 
     for (Record r : actualRecordSet)
     {
@@ -346,6 +345,8 @@ public class Part4Test {
         System.out.println("key: " + entry.getKey() + ", val: " + entry.getValue().getValue());
       }
     }
+    if (actualRecordSet.size() == expectedRecordSet.size())
+      System.out.println("poggers");
 /*    for (Record rec : expectedRecordSet)
     {
       for (Map.Entry<String, Record.Value> entry : rec.getMapAttrNameToValue().entrySet()) {
