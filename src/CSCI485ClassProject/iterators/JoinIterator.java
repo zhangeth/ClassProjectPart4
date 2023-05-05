@@ -213,7 +213,7 @@ public class JoinIterator extends Iterator {
                         System.out.println("Matched employee: " + res.getValueForGivenAttrName("SSN") + " with: " + res.getValueForGivenAttrName("Employee.DNO"));
                         return res;
                     }
-
+                    reco = recordsImpl.getNext(cursor);
                 }
 
             // if reached end, reset outerIdx, and change rightRecord;
