@@ -115,7 +115,9 @@ public class JoinIterator extends Iterator {
             FDBHelper.setFDBKVPair(outerSubspace, outerTx, kvPair);
 
             r = outerIterator.next();
+            outerSize++;
         }
+        System.out.println("outer size: " + outerSize);
     }
 
     private Object applyAlgebraic(Object rightVal)
@@ -162,7 +164,7 @@ public class JoinIterator extends Iterator {
             // loop through all of outer subdir
             for (; currentOuterIdx < pairs.size(); currentOuterIdx++)
             {
-                System.out.println("checking: " + currentOuterIdx + " for: " + rightVal);
+                //System.out.println("checking: " + currentOuterIdx + " for: " + rightVal);
                 FDBKVPair p = pairs.get(currentOuterIdx);
                 Object leftVal = p.getKey().get(0);
                 //System.out.println("leftVal: " + leftVal);
