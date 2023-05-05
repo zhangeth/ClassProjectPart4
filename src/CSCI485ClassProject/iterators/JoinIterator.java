@@ -69,10 +69,6 @@ public class JoinIterator extends Iterator {
 
         tx = FDBHelper.openTransaction(db);
         outerTx = FDBHelper.openTransaction(db);
-
-        initOuterSubspace(predicate.getLeftHandSideAttrName());
-        loopThroughOuter();
-        currentOuterIdx = 0;
         if (innerIterator instanceof SelectIterator)
         {
             // cast to selectIterators for now
@@ -85,6 +81,10 @@ public class JoinIterator extends Iterator {
             SelectIterator si2 = (SelectIterator) outerIterator;
             outerTableName = si2.getTableName();
         }
+        initOuterSubspace(predicate.getLeftHandSideAttrName());
+        loopThroughOuter();
+        currentOuterIdx = 0;
+
 
     }
     private void loopThroughOuter()
