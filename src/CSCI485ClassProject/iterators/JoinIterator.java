@@ -87,16 +87,13 @@ public class JoinIterator extends Iterator {
         System.out.println(r.getValueForGivenAttrName("Name"));
         while (r != null)
         {
-            if (r.getValueForGivenAttrName(attrName) != null)
-            {
-
-            }
             outerSize++;
             // commit value of the predicate to the thing
             Tuple keyTuple = new Tuple();
             keyTuple = keyTuple.addObject(r.getValueForGivenAttrName(attrName));
-
+            // want to add pk as value, so can fetch when matched
             Tuple valueTuple = new Tuple();
+
             //valueTuple = valueTuple.addObject(r);
             FDBKVPair kvPair = new FDBKVPair(outerPath, keyTuple, valueTuple);
             FDBHelper.setFDBKVPair(outerSubspace, outerTx, kvPair);
@@ -138,10 +135,13 @@ public class JoinIterator extends Iterator {
             for (; currentOuterIdx < pairs.size(); currentOuterIdx++)
             {
                 Object leftVal = pairs.get(currentOuterIdx).getKey().get(0);
-                System.out.println("leftVal: " + leftVal);
+                //System.out.println("leftVal: " + leftVal);
                 if (ComparisonUtils.compareTwoObjects(leftVal, rightVal, predicate))
                 {
                     // return record, with the correct processing
+                    // first add outer iterator stuff, wanto make new record
+                    Record res = new Record();
+
                     currentOuterIdx++;
                     return rightRecord;
                     // won't there be repeats?
