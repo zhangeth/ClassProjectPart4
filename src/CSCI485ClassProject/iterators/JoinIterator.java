@@ -80,15 +80,21 @@ public class JoinIterator extends Iterator {
         outerSize = 0;
         Record r = outerIterator.next();
         System.out.println("looping for attr: " + predicate.getLeftHandSideAttrName());
+
+        System.out.println(r.getValueForGivenAttrName("Name"));
         while (r != null)
         {
-            System.out.println("loop val: " + r.getValueForGivenAttrName(attrName));
+            if (r.getValueForGivenAttrName(attrName) != null)
+            {
+
+            }
             outerSize++;
             // commit value of the predicate to the thing
             Tuple keyTuple = new Tuple();
             keyTuple = keyTuple.addObject(r.getValueForGivenAttrName(attrName));
 
             Tuple valueTuple = new Tuple();
+            valueTuple = valueTuple.addObject(r);
             FDBKVPair kvPair = new FDBKVPair(outerPath, keyTuple, valueTuple);
             FDBHelper.setFDBKVPair(outerSubspace, outerTx, kvPair);
 
