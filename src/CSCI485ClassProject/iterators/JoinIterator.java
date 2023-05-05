@@ -121,13 +121,15 @@ public class JoinIterator extends Iterator {
     {
         List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
         Record rightRecord;
-        // now when calling next on inner Iterator, can loop through outer and compare
+        // now when calling next on inner Iterator, can loop through outer and compare, inner is dept
         if (currentOuterIdx >= pairs.size() || currRecord == null) {
             rightRecord = innerIterator.next();
             currRecord = rightRecord;
         }
-        else
+        else {
+            System.out.println("booty");
             rightRecord = currRecord;
+        }
 
         while (rightRecord != null)
         {
@@ -184,9 +186,8 @@ public class JoinIterator extends Iterator {
                     }
 
                     currentOuterIdx = idx;
-                    // I understand why, it's calling next on dno, n
+                    System.out.println("Matched employee: " + res.getValueForGivenAttrName("SSN") + " with: " + res.getValueForGivenAttrName("DNO"));
                     return res;
-                    // won't there be repeats?
                 }
             }
             // if reached end, reset outerIdx

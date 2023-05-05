@@ -339,12 +339,12 @@ public class Part4Test {
     }
 
 
-    for (Record r : actualRecordSet)
+/*    for (Record r : actualRecordSet)
     {
       for (Map.Entry<String, Record.Value> entry : r.getMapAttrNameToValue().entrySet()) {
         System.out.println("key: " + entry.getKey() + ", val: " + entry.getValue().getValue());
       }
-    }
+    }*/
     if (actualRecordSet.size() == expectedRecordSet.size())
       System.out.println("poggers");
 /*    for (Record rec : expectedRecordSet)
