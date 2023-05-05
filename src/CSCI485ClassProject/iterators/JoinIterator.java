@@ -166,7 +166,7 @@ public class JoinIterator extends Iterator {
             // check type of right Record for applying algebraic, and apply it
             rightVal = applyAlgebraic(rightVal);
             // loop through all of outer subdir
-            for (; currentOuterIdx < pairs.size(); currentOuterIdx++)
+            for (; currentOuterIdx < outerSize; currentOuterIdx++)
             {
                 //System.out.println("checking: " + currentOuterIdx + " for: " + rightVal);
                 FDBKVPair p = pairs.get(currentOuterIdx);
