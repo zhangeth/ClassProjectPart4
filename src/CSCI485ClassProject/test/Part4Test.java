@@ -20,13 +20,8 @@ import CSCI485ClassProject.models.TableMetadata;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
+import java.security.Key;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -316,8 +311,6 @@ public class Part4Test {
     Iterator employeeIterator = relAlgOperators.select(EmployeeTableName, nonePredicate, Iterator.Mode.READ, false);
     Iterator departmentIterator = relAlgOperators.select(DepartmentTableName, nonePredicate, Iterator.Mode.READ, false);
 
-    if (employeeIterator == null)
-      System.out.println("butt");
 
     ComparisonPredicate joinPredicate =
         new ComparisonPredicate(DNO, AttributeType.INT, ComparisonOperator.EQUAL_TO, DNO, AttributeType.INT, 1, AlgebraicOperator.PRODUCT);
@@ -344,7 +337,21 @@ public class Part4Test {
       }
       actualRecordSet.add(record);
     }
+    if (actualRecordSet.size() == expectedRecordSet.size())
+      System.out.println("poggers");
+    for (Record r : actualRecordSet)
+    {
+      for (Map.Entry<String, Record.Value> entry : r.getMapAttrNameToValue().entrySet()) {
+        System.out.println("key: " + entry.getKey() + ", val: " + entry.getValue().getValue());
+      }
+    }
+    for (Record rec : expectedRecordSet)
+    {
+      for (Map.Entry<String, Record.Value> entry : rec.getMapAttrNameToValue().entrySet()) {
 
+          System.out.println("expected key: " + entry.getKey() + ", exp val: " + entry.getValue().getValue());
+      }
+    }
     assertEquals(expectedRecordSet, actualRecordSet);
     joinResIterator.commit();
     System.out.println("Test3 passed!");
