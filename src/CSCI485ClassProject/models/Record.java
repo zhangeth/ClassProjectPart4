@@ -107,6 +107,15 @@ public class Record {
     Record record = (Record) o;
     return Objects.equals(mapAttrNameToValue, record.mapAttrNameToValue);
   }
+  public void updateJoinedRecord(String attrKey, String tableName)
+  {
+    Value val = mapAttrNameToValue.get(attrKey);
+    String newKey = tableName + "." + attrKey;
+    mapAttrNameToValue.put(newKey, val);
+    // remove old entry
+    mapAttrNameToValue.remove(attrKey);
+  }
+
 
   @Override
   public int hashCode() {

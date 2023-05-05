@@ -19,6 +19,8 @@ public class SelectIterator extends Iterator {
 
     private final Database db;
     private Transaction tx;
+
+    private String tableName;
     Cursor leftCursor;
     // used only for two Attr predicates
     Cursor rightCursor;
@@ -35,6 +37,10 @@ public class SelectIterator extends Iterator {
         recordsImpl = new RecordsImpl();
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
     // select iterator is always read, I believe
     public SelectIterator(String tableName, ComparisonPredicate predicate, Iterator.Mode mode, boolean isUsingIndex, Database db)
     {
@@ -44,6 +50,7 @@ public class SelectIterator extends Iterator {
         tx = FDBHelper.openTransaction(db);
         this.cp = predicate;
         this.mode = mode;
+        this.tableName = tableName;
         this.isUsingIndex = isUsingIndex;
 
         // make appropriate cursor, according to predicate type

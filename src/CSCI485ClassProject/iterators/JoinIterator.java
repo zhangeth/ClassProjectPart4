@@ -1,5 +1,6 @@
 package CSCI485ClassProject.iterators;
 
+import CSCI485ClassProject.RecordsTransformer;
 import CSCI485ClassProject.fdb.FDBHelper;
 import CSCI485ClassProject.fdb.FDBKVPair;
 import CSCI485ClassProject.models.Record;
@@ -17,10 +18,7 @@ import com.apple.foundationdb.Transaction;
 import com.apple.foundationdb.directory.DirectorySubspace;
 import com.apple.foundationdb.tuple.Tuple;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class JoinIterator extends Iterator {
     private final Database db;
@@ -34,6 +32,8 @@ public class JoinIterator extends Iterator {
     private RecordsImpl recordsImpl;
     private List<String> outerPath;
     private DirectorySubspace outerSubspace;
+    private String outerTableName;
+    private String innerTableName;
 
     private int currentOuterIdx;
     private int outerSize;
@@ -70,7 +70,17 @@ public class JoinIterator extends Iterator {
         initOuterSubspace(predicate.getLeftHandSideAttrName());
         loopThroughOuter();
         currentOuterIdx = 0;
-        // make subspace for value storage
+        if (innerIterator instanceof SelectIterator)
+        {
+            // cast to selectIterators for now
+            SelectIterator si = (SelectIterator)innerIterator;
+            innerTableName = si.getTableName();
+        }
+        if (outerIterator instanceof  SelectIterator)
+        {
+            SelectIterator si2 = (SelectIterator) outerIterator;
+            outerTableName = si2.getTableName();
+        }
 
     }
     private void loopThroughOuter()
@@ -93,6 +103,11 @@ public class JoinIterator extends Iterator {
             keyTuple = keyTuple.addObject(r.getValueForGivenAttrName(attrName));
             // want to add pk as value, so can fetch when matched
             Tuple valueTuple = new Tuple();
+            // could alternate thingies, and when there's a duplicate, then you know
+            for (Map.Entry<String, Record.Value> entry : r.getMapAttrNameToValue().entrySet()) {
+                valueTuple = valueTuple.add(entry.getKey());
+                valueTuple = valueTuple.addObject(entry.getValue());
+            }
 
             //valueTuple = valueTuple.addObject(r);
             FDBKVPair kvPair = new FDBKVPair(outerPath, keyTuple, valueTuple);
@@ -134,16 +149,35 @@ public class JoinIterator extends Iterator {
             System.out.println("rightVal: " + rightVal);
             for (; currentOuterIdx < pairs.size(); currentOuterIdx++)
             {
-                Object leftVal = pairs.get(currentOuterIdx).getKey().get(0);
+                FDBKVPair p = pairs.get(currentOuterIdx);
+                Object leftVal = p.getKey().get(0);
                 //System.out.println("leftVal: " + leftVal);
                 if (ComparisonUtils.compareTwoObjects(leftVal, rightVal, predicate))
                 {
-                    // return record, with the correct processing
-                    // first add outer iterator stuff, wanto make new record
                     Record res = new Record();
+                    List<Object> valueObjs = p.getValue().getItems();
+                    // add the value alternating thingies
+                    for (int i = 0; i < valueObjs.size() / 2; i++)
+                    {
+                        res.setAttrNameAndValue((String)valueObjs.get(i), valueObjs.get(++i));
+                    }
+                    HashMap<String, Record.Value> currMap = res.getMapAttrNameToValue();
+                    // now add right Record
+                    for (Map.Entry<String, Record.Value> entry : rightRecord.getMapAttrNameToValue().entrySet()) {
+                        String key = entry.getKey();
+                        if (currMap.containsKey(key))
+                        {
+                            res.updateJoinedRecord(key, outerTableName);
+                            String str = innerTableName + "." + entry.getKey();
+                            res.setAttrNameAndValue(str, entry.getValue());
+                        }
+                        else {
+                            res.setAttrNameAndValue(key, entry.getValue());
+                        }
+                    }
 
                     currentOuterIdx++;
-                    return rightRecord;
+                    return res;
                     // won't there be repeats?
                 }
             }
