@@ -36,6 +36,8 @@ public class JoinIterator extends Iterator {
     private String innerTableName;
     private Record currRecord;
 
+    private boolean b = false;
+
     private int currentOuterIdx;
     private int outerSize;
 
@@ -122,6 +124,23 @@ public class JoinIterator extends Iterator {
         List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
         System.out.println("outer size: " + outerSize);
         System.out.println("pairs size: " + pairs.size());
+
+        // theory:
+        if (!b)
+        {
+            Cursor c =  new Cursor(Cursor.Mode.READ, outerTableName, RecordsImpl.getTableMetadataByTableNameYuh(outerTx, outerTableName, db), outerTx);
+            Record butt = recordsImpl.getFirst(c);
+            int count = 0;
+
+            while (butt != null)
+            {
+                count++;
+                butt = recordsImpl.getFirst(c);
+
+            }
+            System.out.println(count + " count");
+            b = true;
+        }
     }
 
     private Object applyAlgebraic(Object rightVal)
@@ -165,10 +184,12 @@ public class JoinIterator extends Iterator {
             Object rightVal = rightRecord.getValueForGivenAttrName(predicate.getRightHandSideAttrName());
             // check type of right Record for applying algebraic, and apply it
             rightVal = applyAlgebraic(rightVal);
+
             // loop through all of outer subdir
             for (; currentOuterIdx < outerSize; currentOuterIdx++)
             {
                 //System.out.println("checking: " + currentOuterIdx + " for: " + rightVal);
+                //FDBHelper.getCertainKeyValuePairInSubdirectory(outerSubspace, outerTx, )
                 FDBKVPair p = pairs.get(currentOuterIdx);
                 Object leftVal = p.getKey().get(0);
                 //System.out.println("leftVal: " + leftVal);
