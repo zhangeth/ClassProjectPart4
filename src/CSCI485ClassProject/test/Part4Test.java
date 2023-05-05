@@ -338,21 +338,6 @@ public class Part4Test {
       actualRecordSet.add(record);
     }
 
-
-/*    for (Record r : actualRecordSet)
-    {
-      for (Map.Entry<String, Record.Value> entry : r.getMapAttrNameToValue().entrySet()) {
-        System.out.println("key: " + entry.getKey() + ", val: " + entry.getValue().getValue());
-      }
-    }*/
-    if (actualRecordSet.size() == expectedRecordSet.size())
-      System.out.println("poggers");
-
-    for (Record rec : expectedRecordSet)
-    {
-          System.out.println("expected SSN: " + rec.getValueForGivenAttrName("SSN") + ", exp DNO: " + rec.getValueForGivenAttrName("Employee.DNO"));
-    }
-
     assertEquals(expectedRecordSet, actualRecordSet);
     joinResIterator.commit();
     System.out.println("Test3 passed!");

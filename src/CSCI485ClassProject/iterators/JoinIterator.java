@@ -165,7 +165,6 @@ public class JoinIterator extends Iterator {
         }
         rightRecord = currRecord;
 
-        // logically, this is wrong. what you want to do, is use currentIdx, to keep track of where you are in the outer. And only call next on inner, when you reach end of outer
         while (rightRecord != null)
         {
             Object rightVal = rightRecord.getValueForGivenAttrName(predicate.getRightHandSideAttrName());
@@ -181,8 +180,6 @@ public class JoinIterator extends Iterator {
             else
                 reco = recordsImpl.getNext(cursor);
 
-            //int count = 0;
-
                 while (reco != null)
                 {
                     Object leftVal = reco.getValueForGivenAttrName(predicate.getLeftHandSideAttrName());
@@ -192,22 +189,39 @@ public class JoinIterator extends Iterator {
                         // add the value alternating thingies
                         for (Map.Entry<String, Record.Value> entry : reco.getMapAttrNameToValue().entrySet())
                         {
-                            res.setAttrNameAndValue(entry.getKey(), entry.getValue().getValue());
+                            boolean found = false;
+                            for (String s :attrNames)
+                            {
+                                if (entry.getKey().equals(s))
+                                    found = true;
+                            }
+                            if (!found)
+                                res.setAttrNameAndValue(entry.getKey(), entry.getValue().getValue());
                         }
 
                         HashMap<String, Record.Value> currMap = res.getMapAttrNameToValue();
                         // now add right Record
                         for (Map.Entry<String, Record.Value> entry : rightRecord.getMapAttrNameToValue().entrySet()) {
                             String key = entry.getKey();
-                            if (currMap.containsKey(key))
+                            boolean found = false;
+                            for (String s :attrNames)
                             {
-                                res.updateJoinedRecord(key, outerTableName);
-                                String str = innerTableName + "." + key;
-                                res.setAttrNameAndValue(str, entry.getValue().getValue());
+                                if (entry.getKey().equals(s))
+                                    found = true;
                             }
-                            else {
-                                res.setAttrNameAndValue(key, entry.getValue().getValue());
+                            if (!found)
+                            {
+                                if (currMap.containsKey(key))
+                                {
+                                    res.updateJoinedRecord(key, outerTableName);
+                                    String str = innerTableName + "." + key;
+                                    res.setAttrNameAndValue(str, entry.getValue().getValue());
+                                }
+                                else {
+                                    res.setAttrNameAndValue(key, entry.getValue().getValue());
+                                }
                             }
+
                         }
                         currentOuterIdx++;
                         System.out.println("Matched employee: " + res.getValueForGivenAttrName("SSN") + " with: " + res.getValueForGivenAttrName("Employee.DNO"));
