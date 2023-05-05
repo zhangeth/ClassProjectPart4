@@ -41,11 +41,11 @@ public class JoinIterator extends Iterator {
     {
         // first, make unique subdir
         outerPath = new ArrayList<>(); outerPath.add(this.toString());
-        String dirStr = attrName + "Duplicates";
+        String dirStr = "outer";
         outerPath.add(dirStr);
         outerSubspace = FDBHelper.createOrOpenSubspace(outerTx, outerPath);
         //FDBHelper.commitTransaction(createTx);
-        System.out.println("successfully created dupe subspace");
+        System.out.println("successfully created outer subspace");
         if (FDBHelper.doesSubdirectoryExists(outerTx, outerPath))
             System.out.println("exists");
     }
@@ -62,9 +62,12 @@ public class JoinIterator extends Iterator {
         this.innerIterator = innerIterator;
         this.predicate = predicate;
         this.attrNames = attrNames;
+
         recordsImpl = new RecordsImpl();
+
         tx = FDBHelper.openTransaction(db);
         outerTx = FDBHelper.openTransaction(db);
+
         initOuterSubspace(predicate.getLeftHandSideAttrName());
         loopThroughOuter();
         currentOuterIdx = 0;
@@ -76,8 +79,10 @@ public class JoinIterator extends Iterator {
         String attrName = predicate.getLeftHandSideAttrName();
         outerSize = 0;
         Record r = outerIterator.next();
+        System.out.println("looping for attr: " + predicate.getLeftHandSideAttrName());
         while (r != null)
         {
+            System.out.println("loop val: " + r.getValueForGivenAttrName(attrName));
             outerSize++;
             // commit value of the predicate to the thing
             Tuple keyTuple = new Tuple();
