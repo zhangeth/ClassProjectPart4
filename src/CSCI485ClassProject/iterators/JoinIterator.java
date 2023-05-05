@@ -47,8 +47,6 @@ public class JoinIterator extends Iterator {
         outerSubspace = FDBHelper.createOrOpenSubspace(outerTx, outerPath);
         //FDBHelper.commitTransaction(createTx);
         System.out.println("successfully created outer subspace");
-        if (FDBHelper.doesSubdirectoryExists(outerTx, outerPath))
-            System.out.println("exists");
     }
     public JoinIterator()
     {

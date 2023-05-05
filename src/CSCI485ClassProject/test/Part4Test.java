@@ -318,6 +318,7 @@ public class Part4Test {
 
     if (employeeIterator == null)
       System.out.println("butt");
+
     ComparisonPredicate joinPredicate =
         new ComparisonPredicate(DNO, AttributeType.INT, ComparisonOperator.EQUAL_TO, DNO, AttributeType.INT, 1, AlgebraicOperator.PRODUCT);
     Iterator joinResIterator = relAlgOperators.join(employeeIterator, departmentIterator, joinPredicate, null);
