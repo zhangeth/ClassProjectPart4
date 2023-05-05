@@ -146,8 +146,8 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
     // check if predicate types ok
     if (!ComparisonUtils.checkComparisonPredicateTypes(predicate))
       return null;
-/*    System.out.println("outerIterator: " + outerIterator.next());
-    System.out.println("innerIterator: " + innerIterator.next());*/
+    System.out.println("outerIterator: " + outerIterator.next());
+    System.out.println("innerIterator: " + innerIterator.next());
     // idea: read one iterator into temporary table, use then you don't have to make new iterators
     return new JoinIterator(outerIterator, innerIterator, predicate, attrNames, db);
   }
