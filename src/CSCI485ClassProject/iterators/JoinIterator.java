@@ -99,6 +99,7 @@ public class JoinIterator extends Iterator {
 
         while (r != null)
         {
+            System.out.println("loopin over: " + r.getValueForGivenAttrName("SSN"));
             // commit value of the predicate to the thing
             Tuple keyTuple = new Tuple();
             keyTuple = keyTuple.addObject(r.getValueForGivenAttrName(attrName));
