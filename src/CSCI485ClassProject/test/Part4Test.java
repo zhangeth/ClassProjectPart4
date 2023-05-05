@@ -209,7 +209,7 @@ public class Part4Test {
     assertNotNull(selectRes);
     randGenerator = new Random(randSeed);
     for (int i = 0; i <= 25; i++) {
-      System.out.println("Testing: " + i);
+      // System.out.println("Testing: " + i);
       long ssn = i;
       long dno = getDno(randGenerator, dnoLB, dnoUB);
       Record expectRecord = getExpectedEmployeeRecord(ssn, dno);
@@ -220,7 +220,7 @@ public class Part4Test {
     assertNull(selectRes.next());
     selectRes.commit();
 
-    System.out.println("passed first part of select iterator");
+    // System.out.println("passed first part of select iterator");
 
     predicate =
         new ComparisonPredicate(Salary, AttributeType.INT, ComparisonOperator.LESS_THAN,
@@ -228,7 +228,7 @@ public class Part4Test {
     Set<Record> actualSelectSet = relAlgOperators.simpleSelect(EmployeeTableName, predicate, false);
     assertEquals(expectSet, actualSelectSet);
 
-    System.out.println("passed simple select test");
+    // System.out.println("passed simple select test");
 
     predicate =
         new ComparisonPredicate(Salary, AttributeType.INT, ComparisonOperator.LESS_THAN,
@@ -256,7 +256,7 @@ public class Part4Test {
       assertEquals(dno, record.getValueForGivenAttrName(DNO));
       expectDnoSet.add(dno);
     }
-    System.out.println("passed 1st part proj iterator test");
+    // System.out.println("passed 1st part proj iterator test");
 
     List<Record> inorderDnoRecords = relAlgOperators.simpleProject(EmployeeTableName, DNO, true);
     List<Long> actualDnoList = new ArrayList<>();
@@ -268,7 +268,7 @@ public class Part4Test {
     List<Long> expectDnoList = new ArrayList<>(expectDnoSet);
     java.util.Collections.sort(expectDnoList);
     assertEquals(expectDnoList, actualDnoList);
-    System.out.println("passed 2nd part proj iterator test");
+    // System.out.println("passed 2nd part proj iterator test");
 
     ComparisonPredicate predicate = new ComparisonPredicate(SSN, AttributeType.INT, ComparisonOperator.LESS_THAN, 50);
     Iterator selectRes = relAlgOperators.select(EmployeeTableName, predicate, Iterator.Mode.READ_WRITE, false);
@@ -279,7 +279,7 @@ public class Part4Test {
     Set<String> actualEmailSet = new HashSet<>();
 
     for (int i = 0; i < 50; i++) {
-      System.out.println("testing: " + i);
+      //System.out.println("testing: " + i);
       Record record = emailRecordIterator.next();
       assertNotNull(record);
 
@@ -295,7 +295,6 @@ public class Part4Test {
   }
 
 
-  /*
   @Test
   public void unitTest3 () {
     // create the Department Table
@@ -312,6 +311,7 @@ public class Part4Test {
 
       assertEquals(StatusCode.SUCCESS, records.insertRecord(DepartmentTableName, DepartmentTablePKAttributes, primaryKeyVal, DepartmentTableNonPKAttributeNames, nonPrimaryKeyVal));
     }
+    System.out.println("first part test3 passed");
 
     ComparisonPredicate nonePredicate = new ComparisonPredicate();
     Iterator employeeIterator = relAlgOperators.select(EmployeeTableName, nonePredicate, Iterator.Mode.READ, false);
@@ -333,7 +333,7 @@ public class Part4Test {
 
       expectedRecordSet.add(joinedRecord);
     }
-
+    System.out.println("second part test3 passed");
 
     Set<Record> actualRecordSet = new HashSet<>();
     while (true) {
@@ -348,7 +348,7 @@ public class Part4Test {
     joinResIterator.commit();
     System.out.println("Test3 passed!");
   }
-  */
+
   /*
   @Test
   public void unitTest4() {

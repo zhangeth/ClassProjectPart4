@@ -81,7 +81,6 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
   @Override
   public Iterator project(Iterator iterator, String attrName, boolean isDuplicateFree) {
-
     if (iterator != null)
       return new ProjectIterator(iterator, attrName, isDuplicateFree, db);
     return null;
@@ -95,7 +94,6 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
     while (r != null)
     {
-//      System.out.println("added r: " + r.getValueForGivenAttrName(attrName));
       if (!isDuplicateFree)
         ans.add(r);
       r = pi.next();
@@ -142,6 +140,12 @@ public class RelationalAlgebraOperatorsImpl implements RelationalAlgebraOperator
 
   @Override
   public Iterator join(Iterator outerIterator, Iterator innerIterator, ComparisonPredicate predicate, Set<String> attrNames) {
+    // for each record in outerIterator, iterate through until predicate is matched
+    // check if predicate types ok
+    if (!ComparisonUtils.checkComparisonPredicateTypes(predicate))
+      return null;
+    // idea: read one iterator into temporary table, use then you don't have to make new iterators
+
     return null;
   }
 

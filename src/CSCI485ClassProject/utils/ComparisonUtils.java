@@ -32,6 +32,24 @@ public class ComparisonUtils {
     return true;
   }
 
+  public static boolean compareTwoObjects(Object obj1, Object obj2, ComparisonPredicate cmp)
+  {
+    if (!checkComparisonPredicateTypes(cmp))
+      return false;
+    AttributeType objTypes = cmp.getLeftHandSideAttrType();
+    if (objTypes == AttributeType.INT)
+    {
+      return compareTwoINT(obj1, obj2, cmp.getOperator());
+    }
+    else if (objTypes == AttributeType.DOUBLE)
+    {
+      return compareTwoDOUBLE(obj1, obj2, cmp.getOperator());
+    }
+    else {
+      return compareTwoVARCHAR(obj1, obj2, cmp.getOperator());
+    }
+  }
+
 
   public static boolean compareTwoINT(Object obj1, Object obj2, ComparisonOperator cmp) {
     long val1;

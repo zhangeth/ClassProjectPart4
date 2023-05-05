@@ -83,6 +83,7 @@ public class ProjectIterator extends Iterator {
 
     // idea: use Cursor to iterate over records, make "subrecord" of record, and return that
     // if using cursor, do the same but call iterator.next
+    // going to have to change this to project several attrs
     public Record next() {
         Record r = null;
         if (!isInitialized)
