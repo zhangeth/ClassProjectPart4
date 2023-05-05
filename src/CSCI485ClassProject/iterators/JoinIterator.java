@@ -127,7 +127,6 @@ public class JoinIterator extends Iterator {
             currRecord = rightRecord;
         }
         else {
-            System.out.println("booty");
             rightRecord = currRecord;
         }
 
