@@ -98,7 +98,6 @@ public class JoinIterator extends Iterator {
 
         while (r != null)
         {
-            outerSize++;
             // commit value of the predicate to the thing
             Tuple keyTuple = new Tuple();
             keyTuple = keyTuple.addObject(r.getValueForGivenAttrName(attrName));
@@ -117,7 +116,9 @@ public class JoinIterator extends Iterator {
             r = outerIterator.next();
             outerSize++;
         }
+        List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
         System.out.println("outer size: " + outerSize);
+        System.out.println("pairs size: " + pairs.size());
     }
 
     private Object applyAlgebraic(Object rightVal)
