@@ -36,6 +36,7 @@ public class JoinIterator extends Iterator {
     private String innerTableName;
     private Record currRecord;
 
+    private Cursor cursor;
     private boolean b = false;
 
     private int currentOuterIdx;
@@ -128,18 +129,7 @@ public class JoinIterator extends Iterator {
         // theory:
         if (!b)
         {
-            Cursor c =  new Cursor(Cursor.Mode.READ, outerTableName, RecordsImpl.getTableMetadataByTableNameYuh(outerTx, outerTableName, db), outerTx);
-            Record butt = recordsImpl.getFirst(c);
-            int count = 0;
-
-            while (butt != null)
-            {
-                count++;
-                butt = recordsImpl.getNext(c);
-
-            }
-            System.out.println(count + " count");
-            b = true;
+            cursor =  new Cursor(Cursor.Mode.READ, outerTableName, RecordsImpl.getTableMetadataByTableNameYuh(outerTx, outerTableName, db), outerTx);
         }
     }
 
@@ -168,16 +158,13 @@ public class JoinIterator extends Iterator {
 
     public Record next()
     {
-        List<FDBKVPair> pairs = FDBHelper.getAllKeyValuePairsOfSubdirectory(db, outerTx, outerPath);
         Record rightRecord;
         // now when calling next on inner Iterator, can loop through outer and compare, inner is dept currRecord refers to current inner record
-        if (currentOuterIdx >= pairs.size() || currRecord == null) {
-            rightRecord = innerIterator.next();
-            currRecord = rightRecord;
+        if (currRecord == null) {
+            currRecord = innerIterator.next();
         }
-        else {
-            rightRecord = currRecord;
-        }
+        rightRecord = currRecord;
+
         // logically, this is wrong. what you want to do, is use currentIdx, to keep track of where you are in the outer. And only call next on inner, when you reach end of outer
         while (rightRecord != null)
         {
@@ -185,45 +172,53 @@ public class JoinIterator extends Iterator {
             // check type of right Record for applying algebraic, and apply it
             rightVal = applyAlgebraic(rightVal);
 
+            Record reco;
             // loop through all of outer subdir
-            for (; currentOuterIdx < outerSize; currentOuterIdx++)
-            {
-                //System.out.println("checking: " + currentOuterIdx + " for: " + rightVal);
-                //FDBHelper.getCertainKeyValuePairInSubdirectory(outerSubspace, outerTx, )
-                FDBKVPair p = pairs.get(currentOuterIdx);
-                Object leftVal = p.getKey().get(0);
-                //System.out.println("leftVal: " + leftVal);
-                if (ComparisonUtils.compareTwoObjects(leftVal, rightVal, predicate))
+            if (!b) {
+                reco = recordsImpl.getFirst(cursor);
+                b = true;
+            }
+            else
+                reco = recordsImpl.getNext(cursor);
+
+            //int count = 0;
+
+                while (reco != null)
                 {
-                    Record res = new Record();
-                    List<Object> valueObjs = p.getValue().getItems();
-                    // add the value alternating thingies
-                    for (int i = 0; i < valueObjs.size() - 1; i++)
+                    Object leftVal = reco.getValueForGivenAttrName(predicate.getLeftHandSideAttrName());
+                    if (ComparisonUtils.compareTwoObjects(leftVal, rightVal, predicate))
                     {
-                        res.setAttrNameAndValue((String)valueObjs.get(i), valueObjs.get(++i));
+                        Record res = new Record();
+                        // add the value alternating thingies
+                        for (Map.Entry<String, Record.Value> entry : rightRecord.getMapAttrNameToValue().entrySet())
+                        {
+                            res.setAttrNameAndValue(entry.getKey(), entry.getValue().getValue());
+                        }
+
+                        HashMap<String, Record.Value> currMap = res.getMapAttrNameToValue();
+                        // now add right Record
+                        for (Map.Entry<String, Record.Value> entry : rightRecord.getMapAttrNameToValue().entrySet()) {
+                            String key = entry.getKey();
+                            if (currMap.containsKey(key))
+                            {
+                                res.updateJoinedRecord(key, outerTableName);
+                                String str = innerTableName + "." + key;
+                                res.setAttrNameAndValue(str, entry.getValue().getValue());
+                            }
+                            else {
+                                res.setAttrNameAndValue(key, entry.getValue().getValue());
+                            }
+                        }
+                        currentOuterIdx++;
+                        System.out.println("Matched employee: " + res.getValueForGivenAttrName("SSN") + " with: " + res.getValueForGivenAttrName("Employee.DNO"));
+                        return res;
                     }
 
-                    HashMap<String, Record.Value> currMap = res.getMapAttrNameToValue();
-                    // now add right Record
-                    for (Map.Entry<String, Record.Value> entry : rightRecord.getMapAttrNameToValue().entrySet()) {
-                        String key = entry.getKey();
-                        if (currMap.containsKey(key))
-                        {
-                            res.updateJoinedRecord(key, outerTableName);
-                            String str = innerTableName + "." + key;
-                            res.setAttrNameAndValue(str, entry.getValue().getValue());
-                        }
-                        else {
-                            res.setAttrNameAndValue(key, entry.getValue().getValue());
-                        }
-                    }
-                    currentOuterIdx++;
-                    System.out.println("Matched employee: " + res.getValueForGivenAttrName("SSN") + " with: " + res.getValueForGivenAttrName("Employee.DNO"));
-                    return res;
                 }
-            }
+
             // if reached end, reset outerIdx, and change rightRecord;
-            currentOuterIdx = 0;
+            cursor =  new Cursor(Cursor.Mode.READ, outerTableName, RecordsImpl.getTableMetadataByTableNameYuh(outerTx, outerTableName, db), outerTx); b = false;
+            //currRecord = recordsImpl.getFirst(cursor);
             rightRecord = innerIterator.next();
             currRecord = rightRecord;
         }
