@@ -88,6 +88,7 @@ public class JoinIterator extends Iterator {
     private void loopThroughOuter()
     {
         String attrName = predicate.getLeftHandSideAttrName();
+        System.out.println("attr in question: " + attrName);
         outerSize = 0;
         Record r = outerIterator.next();
         System.out.println("looping for attr: " + predicate.getLeftHandSideAttrName());
