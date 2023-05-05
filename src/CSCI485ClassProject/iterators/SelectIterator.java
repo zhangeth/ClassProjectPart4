@@ -91,6 +91,10 @@ public class SelectIterator extends Iterator {
                 // compare values and such
                 AttributeType leftType = cp.getLeftHandSideAttrType();
                 AttributeType rightType = cp.getRightHandSideAttrType();
+                if (cp.getPredicateType() == ComparisonPredicate.Type.NONE)
+                {
+                    return r;
+                }
                 if (leftType != rightType)
                 {
                     System.out.println("Types don't match");

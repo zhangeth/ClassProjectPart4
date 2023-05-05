@@ -18,6 +18,8 @@ public class ComparisonUtils {
 
   public static boolean checkComparisonPredicateTypes(ComparisonPredicate cp)
   {
+    if (cp.getPredicateType() == ComparisonPredicate.Type.NONE)
+      return true;
     if (cp.getPredicateType() == ComparisonPredicate.Type.TWO_ATTRS)
     {
       AttributeType leftType = cp.getLeftHandSideAttrType();
